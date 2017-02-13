@@ -1,14 +1,13 @@
 {
-  "name": "bay-utils",
-  "version": "1.1.6",
+  "name": "bay-components",
+  "version": "0.0.1",
   "description": "common functions for shanbay frontend projects",
   "main": "lib/index.js",
   "scripts": {
-    "prepublish": "npm run compile",
-    "test": "npm run compile && mocha -w --compilers js:babel-core/register",
-    "compile": "webpack --display-error-detail --progress && babel -d lib/ src/ --presets=latest"
+    "start": "python -m SimpleHTTPServer && webpack -w",
+    "test": "npm run compile && mocha -w --compilers js:babel-core/register"
   },
-  "author": "ice",
+  "author": "wendy",
   "license": "ISC",
   "devDependencies": {
     "babel-cli": "^6.18.0",
@@ -16,7 +15,12 @@
     "babel-loader": "^6.2.4",
     "babel-preset-latest": "^6.16.0",
     "chai": "^3.5.0",
+    "css-loader": "^0.23.1",
+    "less": "^2.6.0",
+    "less-loader": "^2.2.2",
+    "postcss-loader": "^0.9.1",
     "clean-webpack-plugin": "^0.1.14",
+    "extract-text-webpack-plugin": "^1.0.1",
     "mocha": "^3.2.0",
     "webpack": "^1.14.0"
   }

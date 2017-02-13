@@ -1,3 +1,9 @@
+const resetControls = ($controls) => {
+    $controls.find('.current-point').css('left', '0%');
+    $controls.find('.current-bar').css('width', '0%');
+    $controls.find('.audio-controls-time').html('00:00');
+};
+
 const handlePlay = (audio) => () => {
     audio.play();
 };
@@ -6,7 +12,7 @@ const handlePause = (audio) => () => {
     audio.pause();
 };
 
-const renderBtn = ($controls, type = 'play') => {
+const renderPlayBtn = ($controls, type = 'play') => {
     if (type === 'play') {
         $controls.find('.play-btn').hide();
         $controls.find('.pause-btn').show();
@@ -17,19 +23,36 @@ const renderBtn = ($controls, type = 'play') => {
 };
 
 const renderPlay = ($controls) => () => {
-    renderBtn($controls, 'play');
+    renderPlayBtn($controls, 'play');
 };
 
 const renderPause = ($controls) => () => {
-    renderBtn($controls, 'pause');
+    renderPlayBtn($controls, 'pause');
 };
 
 const renderEnded = ($controls) => () => {
-    console.log('ended');
+    resetControls($controls);
 };
 
-const renderBar = ($controls) => () => {
-    console.log('updating');
+const formatNum = (num) => {
+    const value = Math.floor(num);
+    return value < 10 ? `0${value}` : value;
+};
+
+const formatSeconds = (mSec) => {
+    const mins = formatNum(mSec / 60);
+    const secs = formatNum(mSec % 60);
+    return `${mins}:${secs}`;
+};
+
+const renderBar = ($controls) => (e) => {
+    const videoEl = e.target;
+    const currentTime = videoEl.currentTime;
+    const duration = videoEl.duration;
+    const percent = (videoEl.currentTime / duration) * 100;
+    $controls.find('.current-point').css('left', `${percent}%`);
+    $controls.find('.current-bar').css('width', `${percent}%`);
+    $controls.find('.audio-controls-time').html(formatSeconds(currentTime));
 };
 
 const bindEvents = ($audio, $controls) => {
@@ -48,13 +71,13 @@ const buildControls = () => {
         '<div class="audio-controls">',
         '   <div class="audio-controls-btn">',
         '       <i class="ib ib-play-circle-o play-btn"></i>',
-        '       <i class="ib ib-pause-circle pause-btn"></i>',
+        '       <i class="ib ib-pause-circle pause-btn" style="display: none;"></i>',
         '   </div>',
         '   <div class="audio-controls-bar">',
         '       <div class="current-point"></div>',
         '       <div class="current-bar"></div>',
         '   </div>',
-        '   <div class="audio-controls-time"></div>',
+        '   <div class="audio-controls-time">00:00</div>',
         '</div>',
     ].join('');
     return $($.parseHTML(controlsHTML));

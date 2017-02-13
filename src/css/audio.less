@@ -1,0 +1,47 @@
+.audio-controls {
+    position: relative;
+}
+
+.audio-controls-btn {
+    position: absolute;
+    left: 10px;
+    i {
+        font-size: 25px;
+        color: #29c192;
+    }
+}
+
+.audio-controls-bar {
+    position: absolute;
+    left: 45px;
+    background: #d8d8d8;
+    right: 65px;
+    height: 4px;
+    top: 11px;
+    .current-point {
+        left: 0;
+        position: absolute;
+        top: -5px;
+        width: 10px;
+        height: 10px;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.2);
+    	border: solid 0.5px #cccccc;
+    }
+
+    .current-bar {
+        width: 0;
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 4px;
+        background: #29c192;
+    }
+}
+
+.audio-controls-time {
+    position: absolute;
+    right: 10px;
+    top: 3px;
+}
