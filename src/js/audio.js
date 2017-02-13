@@ -1,3 +1,14 @@
+const formatNum = (num) => {
+    const value = Math.floor(num);
+    return value < 10 ? `0${value}` : value;
+};
+
+const formatSeconds = (mSec) => {
+    const mins = formatNum(mSec / 60);
+    const secs = formatNum(mSec % 60);
+    return `${mins}:${secs}`;
+};
+
 const resetControls = ($controls) => {
     $controls.find('.current-point').css('left', '0%');
     $controls.find('.current-bar').css('width', '0%');
@@ -34,36 +45,14 @@ const renderEnded = ($controls) => () => {
     resetControls($controls);
 };
 
-const formatNum = (num) => {
-    const value = Math.floor(num);
-    return value < 10 ? `0${value}` : value;
-};
-
-const formatSeconds = (mSec) => {
-    const mins = formatNum(mSec / 60);
-    const secs = formatNum(mSec % 60);
-    return `${mins}:${secs}`;
-};
-
 const renderBar = ($controls) => (e) => {
-    const videoEl = e.target;
-    const currentTime = videoEl.currentTime;
-    const duration = videoEl.duration;
-    const percent = (videoEl.currentTime / duration) * 100;
+    const audioEl = e.target;
+    const currentTime = audioEl.currentTime;
+    const duration = audioEl.duration;
+    const percent = (audioEl.currentTime / duration) * 100;
     $controls.find('.current-point').css('left', `${percent}%`);
     $controls.find('.current-bar').css('width', `${percent}%`);
     $controls.find('.audio-controls-time').html(formatSeconds(currentTime));
-};
-
-const bindEvents = ($audio, $controls) => {
-    $controls
-        .on('click', '.ib-play-circle-o', handlePlay($audio[0]))
-        .on('click', '.ib-pause-circle', handlePause($audio[0]));
-    $audio
-        .on('timeupdate', renderBar($controls))
-        .on('play', renderPlay($controls))
-        .on('pause', renderPause($controls))
-        .on('ended', renderEnded($controls));
 };
 
 const buildControls = () => {
@@ -83,6 +72,17 @@ const buildControls = () => {
     return $($.parseHTML(controlsHTML));
 };
 
+const bindEvents = ($audio, $controls) => {
+    $controls
+        .on('click', '.ib-play-circle-o', handlePlay($audio[0]))
+        .on('click', '.ib-pause-circle', handlePause($audio[0]));
+    $audio
+        .on('timeupdate', renderBar($controls))
+        .on('play', renderPlay($controls))
+        .on('pause', renderPause($controls))
+        .on('ended', renderEnded($controls));
+};
+
 const initAudio = ($item) => {
     const $controls = buildControls();
     bindEvents($item, $controls);
@@ -91,6 +91,16 @@ const initAudio = ($item) => {
 
 export const initAudios = (audioSelector, options = {}) => {
     $(audioSelector).each((i, item) => {
-        initAudio($(item));
+        initAudio($(item), options);
+    });
+};
+
+const initVideo = () => {
+
+};
+
+export const initVideos = (audioSelector, options = {}) => {
+    $(audioSelector).each((i, item) => {
+        initVideo($(item), options);
     });
 };
