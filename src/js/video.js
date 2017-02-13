@@ -42,6 +42,12 @@ const resetControls = ($controls) => {
     $controls.find('.video-controls-time').html('00:00');
 };
 
+const handleStart = ($controls, $cover, video) => () => {
+    $cover.hide();
+    $controls.show();
+    video.play();
+};
+
 const handlePlay = video => () => {
     video.play();
 };
@@ -79,32 +85,44 @@ const renderBar = $controls => (e) => {
     const percent = (videoEl.currentTime / duration) * 100;
     $controls.find('.current-point').css('left', `${percent}%`);
     $controls.find('.current-bar').css('width', `${percent}%`);
-    $controls.find('.video-controls-time').html(formatSeconds(currentTime));
+    $controls.find('.video-controls-remaintime').html(formatSeconds(currentTime));
+    $controls.find('.video-controls-fulltime').html(formatSeconds(duration));
 };
 
 const buildControls = () => {
     const controlsHTML = [
-        '<div class="video-controls">',
+        '<div class="video-controls" style="display: none;">',
         '   <div class="video-controls-btn">',
-        '       <i class="ib ib-play-circle-o play-btn"></i>',
-        '       <i class="ib ib-pause-circle pause-btn" style="display: none;"></i>',
+        '       <i class="ib ib-play play-btn"></i>',
+        '       <i class="ib ib-pause pause-btn" style="display: none;"></i>',
         '   </div>',
-        '   <div class="video-controls-time">00:00</div>',
+        '   <div class="video-controls-remaintime">00:00</div>',
         '   <div class="video-controls-bar">',
         '       <div class="current-point"></div>',
         '       <div class="current-bar"></div>',
         '   </div>',
-        '   <div class="video-controls-time">00:00</div>',
+        '   <div class="video-controls-fulltime">00:00</div>',
         '   <div class="fullscreen"><i class="ib ib-expand"/></div>',
         '</div>',
     ].join('');
     return $($.parseHTML(controlsHTML));
 };
 
-const bindEvents = ($video, $controls) => {
+const buildCover = () => {
+    const coverHtml = [
+        '<div class="video-cover">',
+        '   <div class="start-btn"><i class="ib ib-play-circle-o"></i></div>',
+        '</div>',
+    ].join('');
+    return $($.parseHTML(coverHtml));
+};
+
+const bindEvents = ($video, $controls, $cover) => {
+    $cover
+        .on('click', handleStart($controls, $cover, $video[0]));
     $controls
-        .on('click', '.ib-play-circle-o', handlePlay($video[0]))
-        .on('click', '.ib-pause-circle', handlePause($video[0]))
+        .on('click', '.play-btn', handlePlay($video[0]))
+        .on('click', '.pause-btn', handlePause($video[0]))
         .on('click', '.fullscreen', toggleFullscreen($video[0]));
     $video
         .on('timeupdate', renderBar($controls))
@@ -114,12 +132,16 @@ const bindEvents = ($video, $controls) => {
 };
 
 const initVideo = ($item) => {
-    const $controls = buildControls();
-    bindEvents($item, $controls);
-
     $item.wrap("<div class='video-box'></div>");
     const root = $item.parent();
+
+    const $controls = buildControls();
+    const $cover = buildCover();
+
+    root.append($cover);
     root.append($controls);
+
+    bindEvents($item, $controls, $cover);
 };
 
 const initVideos = (videoSelector, options = {}) => {
