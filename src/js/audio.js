@@ -15,11 +15,11 @@ const resetControls = ($controls) => {
     $controls.find('.audio-controls-time').html('00:00');
 };
 
-const handlePlay = (audio) => () => {
+const handlePlay = audio => () => {
     audio.play();
 };
 
-const handlePause = (audio) => () => {
+const handlePause = audio => () => {
     audio.pause();
 };
 
@@ -33,19 +33,19 @@ const renderPlayBtn = ($controls, type = 'play') => {
     }
 };
 
-const renderPlay = ($controls) => () => {
+const renderPlay = $controls => () => {
     renderPlayBtn($controls, 'play');
 };
 
-const renderPause = ($controls) => () => {
+const renderPause = $controls => () => {
     renderPlayBtn($controls, 'pause');
 };
 
-const renderEnded = ($controls) => () => {
+const renderEnded = $controls => () => {
     resetControls($controls);
 };
 
-const renderBar = ($controls) => (e) => {
+const renderBar = $controls => (e) => {
     const audioEl = e.target;
     const currentTime = audioEl.currentTime;
     const duration = audioEl.duration;
@@ -91,18 +91,10 @@ const initAudio = ($item) => {
     $item.after($controls);
 };
 
-export const initAudios = (audioSelector, options = {}) => {
+const initAudios = (audioSelector, options = {}) => {
     $(audioSelector).each((i, item) => {
         initAudio($(item), options);
     });
 };
 
-const initVideo = () => {
-
-};
-
-export const initVideos = (audioSelector, options = {}) => {
-    $(audioSelector).each((i, item) => {
-        initVideo($(item), options);
-    });
-};
+export default initAudios;
