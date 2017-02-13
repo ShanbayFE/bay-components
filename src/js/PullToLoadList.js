@@ -7,7 +7,7 @@ export default class PullToLoadList {
             apiUrl: '',
             renderItem: () => {},
             onLoadedFirstPage: () => {},
-            parseData: (data) => ({
+            parseData: data => ({
                 items: data.objects,
                 total: data.total,
             }),
@@ -42,7 +42,7 @@ export default class PullToLoadList {
 
         $window.on('touchmove mousewheel', () => {
             if (this.isLoading) return;
-            if ($window.scrollTop() + $window.height() - $document.height() >= 0) {
+            if (($window.scrollTop() + $window.height()) - $document.height() >= 0) {
                 this.loadMoreData();
             }
         });
@@ -55,7 +55,8 @@ export default class PullToLoadList {
         if (this.checkIsLastPage()) {
             return;
         }
-        this.pageNum++;
+
+        this.pageNum += 1;
         this.renderLoading();
         this.loadItems();
     }
