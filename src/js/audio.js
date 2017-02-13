@@ -58,15 +58,17 @@ const renderBar = ($controls) => (e) => {
 const buildControls = () => {
     const controlsHTML = [
         '<div class="audio-controls">',
-        '   <div class="audio-controls-btn">',
-        '       <i class="ib ib-play-circle-o play-btn"></i>',
-        '       <i class="ib ib-pause-circle pause-btn" style="display: none;"></i>',
+        '   <div class="audio-controls-content">',
+        '      <div class="audio-controls-btn">',
+        '          <i class="ib ib-play-circle-o play-btn"></i>',
+        '          <i class="ib ib-pause-circle pause-btn" style="display: none;"></i>',
+        '      </div>',
+        '      <div class="audio-controls-bar">',
+        '          <div class="current-point"></div>',
+        '          <div class="current-bar"></div>',
+        '      </div>',
+        '      <div class="audio-controls-time">00:00</div>',
         '   </div>',
-        '   <div class="audio-controls-bar">',
-        '       <div class="current-point"></div>',
-        '       <div class="current-bar"></div>',
-        '   </div>',
-        '   <div class="audio-controls-time">00:00</div>',
         '</div>',
     ].join('');
     return $($.parseHTML(controlsHTML));
@@ -74,8 +76,8 @@ const buildControls = () => {
 
 const bindEvents = ($audio, $controls) => {
     $controls
-        .on('click', '.ib-play-circle-o', handlePlay($audio[0]))
-        .on('click', '.ib-pause-circle', handlePause($audio[0]));
+        .on('click', '.play-btn', handlePlay($audio[0]))
+        .on('click', '.pause-btn', handlePause($audio[0]));
     $audio
         .on('timeupdate', renderBar($controls))
         .on('play', renderPlay($controls))
