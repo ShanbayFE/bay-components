@@ -1,6 +1,6 @@
 import { ajax } from 'bay-utils';
 
-export default class PullToLoadList {
+export class PullToLoadList {
     constructor(options = {}) {
         const defaultOptions = {
             ipp: 10,
@@ -12,7 +12,7 @@ export default class PullToLoadList {
                 total: data.total,
             }),
         };
-        this.options = Object.assign({}, defaultOptions, options);
+        this.options = $.extend({}, defaultOptions, options);
 
         this.apiUrl = this.options.apiUrl;
         this.ipp = this.options.ipp;
