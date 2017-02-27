@@ -3,6 +3,7 @@ import { ajax } from 'bay-utils';
 export class PullToLoadList {
     constructor(options = {}) {
         const defaultOptions = {
+            container: document,
             ipp: 10,
             pageNum: 0,
             total: 0,
@@ -23,6 +24,7 @@ export class PullToLoadList {
         this.renderItem = this.options.renderItem;
         this.parseData = this.options.parseData;
         this.onLoadedFirstPage = this.options.onLoadedFirstPage;
+        this.container = this.options.container;
 
         this.items = [];
         this.isLoading = false;
@@ -44,12 +46,14 @@ export class PullToLoadList {
 
     bindEvents() {
         const $window = $(window);
-        const $document = $(document);
+        const container = $(this.container)[0];
         const $body = $('body');
 
         $window.on('touchmove mousewheel', () => {
             if (this.isLoading) return;
-            if (($window.scrollTop() + $window.height()) - $document.height() >= 0) {
+
+            // reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight
+            if (container.scrollHeight - container.scrollTop <= container.clientHeight) {
                 this.loadMoreData();
             }
         });
