@@ -16,12 +16,12 @@ export class PullToLoadList {
 
         this.apiUrl = this.options.apiUrl;
         this.ipp = this.options.ipp;
+        this.pageNum = this.options.pageNum || 1;
         this.renderItem = this.options.renderItem;
         this.parseData = this.options.parseData;
         this.onLoadedFirstPage = this.options.onLoadedFirstPage;
 
         this.items = [];
-        this.pageNum = 1;
         this.total = 0;
         this.isLoading = false;
         this.$loadHint = $('#load-hint');
