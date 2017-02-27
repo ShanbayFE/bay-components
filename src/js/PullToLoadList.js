@@ -4,6 +4,8 @@ export class PullToLoadList {
     constructor(options = {}) {
         const defaultOptions = {
             ipp: 10,
+            pageNum: 0,
+            total: 0,
             apiUrl: '',
             renderItem: () => {},
             onLoadedFirstPage: () => {},
@@ -16,8 +18,8 @@ export class PullToLoadList {
 
         this.apiUrl = this.options.apiUrl;
         this.ipp = this.options.ipp;
-        this.pageNum = this.options.pageNum || 1;
-        this.total = this.options.total || 0;
+        this.pageNum = this.options.pageNum;
+        this.total = this.options.total;
         this.renderItem = this.options.renderItem;
         this.parseData = this.options.parseData;
         this.onLoadedFirstPage = this.options.onLoadedFirstPage;
@@ -31,9 +33,10 @@ export class PullToLoadList {
     }
 
     init() {
-        if (this.pageNum > 1) {
+        if (this.pageNum > 0) {
             this.onLoadedFirstPage({});
         } else {
+            this.pageNum += 1;
             this.loadItems(this.onLoadedFirstPage);
         }
         this.bindEvents();
