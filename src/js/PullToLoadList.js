@@ -17,12 +17,12 @@ export class PullToLoadList {
         this.apiUrl = this.options.apiUrl;
         this.ipp = this.options.ipp;
         this.pageNum = this.options.pageNum || 1;
+        this.total = this.options.total || 0;
         this.renderItem = this.options.renderItem;
         this.parseData = this.options.parseData;
         this.onLoadedFirstPage = this.options.onLoadedFirstPage;
 
         this.items = [];
-        this.total = 0;
         this.isLoading = false;
         this.$loadHint = $('#load-hint');
         this.$loadMoreHint = $('#load-more-hint');
@@ -31,7 +31,11 @@ export class PullToLoadList {
     }
 
     init() {
-        this.loadItems(this.onLoadedFirstPage);
+        if (this.pageNum > 1) {
+            this.onLoadedFirstPage({});
+        } else {
+            this.loadItems(this.onLoadedFirstPage);
+        }
         this.bindEvents();
     }
 

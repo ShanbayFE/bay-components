@@ -1,10 +1,12 @@
 {
   "name": "bay-components",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "common functions for shanbay frontend projects",
   "main": "lib/index.js",
   "scripts": {
     "start": "python -m SimpleHTTPServer & webpack -w",
+    "compile": "webpack -p",
+    "prepublish": "npm run compile",
     "test": "npm run compile && mocha -w --compilers js:babel-core/register"
   },
   "author": "wendy",
