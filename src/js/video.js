@@ -39,7 +39,7 @@ export const toggleFullscreen = videoArea => () => {
 const resetControls = ($controls) => {
     $controls.find('.current-point').css('left', '0%');
     $controls.find('.current-bar').css('width', '0%');
-    $controls.find('.video-controls-time').html('00:00');
+    $controls.find('.video-controls-remaintime').html('00:00');
 };
 
 const handleStart = ($controls, $cover, video) => () => {
