@@ -3,7 +3,7 @@ import { ajax } from 'bay-utils';
 export class PullToLoadList {
     constructor(options = {}) {
         const defaultOptions = {
-            container: document,
+            container: window,
             ipp: 10,
             pageNum: 0,
             total: 0,
@@ -52,9 +52,17 @@ export class PullToLoadList {
         $window.on('touchmove mousewheel', () => {
             if (this.isLoading) return;
 
-            // reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight
-            if (container.scrollHeight - container.scrollTop <= container.clientHeight) {
-                this.loadMoreData();
+            if (container === window) {
+                const docRoot = document.documentElement;
+                if (docRoot.scrollHeight - window.scrollY <= docRoot.clientHeight) {
+                    this.loadMoreData();
+                }
+            } else {
+                // reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight
+                // Note: container 固定高 且 scroll
+                if (container.scrollHeight - container.scrollTop <= container.clientHeight) {
+                    this.loadMoreData();
+                }
             }
         });
         $body.on('click', '#load-more-hint', () => {
