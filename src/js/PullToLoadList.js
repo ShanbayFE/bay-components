@@ -8,7 +8,7 @@ export class PullToLoadList {
             pageNum: 0,
             total: 0,
             apiUrl: '',
-            distance: 10,
+            threshold: 10,
             renderItem: () => {},
             onLoadedFirstPage: () => {},
             parseData: data => ({
@@ -25,6 +25,7 @@ export class PullToLoadList {
         this.renderItem = this.options.renderItem;
         this.parseData = this.options.parseData;
         this.onLoadedFirstPage = this.options.onLoadedFirstPage;
+        this.threshold = this.options.threshold;
         this.container = this.options.container;
 
         this.items = [];
