@@ -3,7 +3,7 @@ import { ajax } from 'bay-utils';
 export class PullToLoadList {
     constructor(options = {}) {
         const defaultOptions = {
-            container: document,
+            container: document.body,
             ipp: 10,
             pageNum: 0,
             total: 0,
