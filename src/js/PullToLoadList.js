@@ -8,6 +8,7 @@ export class PullToLoadList {
             pageNum: 0,
             total: 0,
             apiUrl: '',
+            distance: 10,
             renderItem: () => {},
             onLoadedFirstPage: () => {},
             parseData: data => ({
@@ -54,13 +55,13 @@ export class PullToLoadList {
 
             if (container === window) {
                 const docRoot = document.documentElement;
-                if (docRoot.scrollHeight - window.scrollY <= docRoot.clientHeight) {
+                if (docRoot.scrollHeight - window.scrollY - this.distance <= docRoot.clientHeight) {
                     this.loadMoreData();
                 }
             } else {
                 // reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight
                 // Note: container 固定高 且 scroll
-                if (container.scrollHeight - container.scrollTop <= container.clientHeight) {
+                if (container.scrollHeight - container.scrollTop - this.distance <= container.clientHeight) {
                     this.loadMoreData();
                 }
             }
