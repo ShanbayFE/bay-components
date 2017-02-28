@@ -55,7 +55,8 @@ export class PullToLoadList {
 
             if (container === window) {
                 const docRoot = document.documentElement;
-                if (docRoot.scrollHeight - Math.ceil(window.scrollY) - this.threshold <= docRoot.clientHeight) {
+
+                if (docRoot.scrollHeight - Math.ceil(window.scrollY || window.pageYOffset) - this.threshold <= docRoot.clientHeight) {
                     this.loadMoreData();
                 }
             } else {
