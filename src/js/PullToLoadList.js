@@ -25,6 +25,7 @@ export class PullToLoadList {
         this.renderItem = this.options.renderItem;
         this.parseData = this.options.parseData;
         this.onLoadedFirstPage = this.options.onLoadedFirstPage;
+        this.threshold = this.options.threshold;
         this.container = this.options.container;
 
         this.items = [];
