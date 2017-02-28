@@ -8,7 +8,7 @@ export class PullToLoadList {
             pageNum: 0,
             total: 0,
             apiUrl: '',
-            distance: 10,
+            threshold: 10,
             renderItem: () => {},
             onLoadedFirstPage: () => {},
             parseData: data => ({
