@@ -11,6 +11,7 @@ export class PullToLoadList {
             threshold: 10,
             renderItem: () => {},
             onLoadedFirstPage: () => {},
+            onLoadedError: () => {},
             parseData: data => ({
                 items: data.objects,
                 total: data.total,
@@ -41,7 +42,7 @@ export class PullToLoadList {
             this.onLoadedFirstPage({});
         } else {
             this.pageNum += 1;
-            this.loadItems(this.onLoadedFirstPage);
+            this.loadItems(this.onLoadedFirstPage, this.onLoadedError);
         }
         this.bindEvents();
     }
@@ -105,7 +106,7 @@ export class PullToLoadList {
         this.renderMoreHint();
     }
 
-    loadItems(callback = () => {}) {
+    loadItems(onSuccess = () => {}, onError = () => {}) {
         this.isLoading = true;
         let url;
         if (this.apiUrl.split('?').length > 1) {
@@ -123,11 +124,11 @@ export class PullToLoadList {
                 this.total = parsedData.total;
                 this.isLoading = false;
                 this.renderItems();
-                callback && callback(data);
+                onSuccess(data);
             },
-            error: () => {
+            error: (status, msg) => {
                 this.$loadHint.hide();
-                callback && callback();
+                onError(status, msg);
             },
         });
     }
