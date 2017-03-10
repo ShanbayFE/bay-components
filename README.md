@@ -38,4 +38,4 @@
 });
 ```
 
-其中 threshold 是下拉到底部的范围，默认下拉到距页面底部 10px 的范围内会继续请求下一页的数据。renderItem 是每条数据的渲染函数。parseData 是对请求返回的数据进行的处理函数。onLoadedFirstPage 是在请求完第一页数据后出发的函数。
+其中 threshold 是下拉到底部的范围，默认下拉到距页面底部 10px 的范围内会继续请求下一页的数据。renderItem 是每条数据的渲染函数。parseData 是对请求返回的数据进行的处理函数。onLoadedFirstPage 是在请求完第一页数据后触发的函数。
