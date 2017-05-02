@@ -1,8 +1,5 @@
 import { merge, ajax } from 'bay-utils';
-import * as Config from 'config';
 import comment from './comment';
-
-const imagePath = url => `${Config.STATIC_URL}/bdc/images/${url}`;
 
 class Comments {
     constructor(options) {
@@ -177,7 +174,7 @@ class Comments {
 
         const html = `
             <div class="empty-block">
-                <img src=${imagePath('no-comment.png')} />
+                <img src="https://static.baydn.com/baydn/public/images/object-sofa.png" />
                 <p>快来抢沙发吧～</p>
             </div>
         `;
