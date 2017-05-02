@@ -1,0 +1,24 @@
+.bay-tabs {
+    .tabs-header {
+        display: flex;
+        justify-content: space-around;
+        line-height: 3;
+        font-size: 16px;
+        color: #666;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .tab-title {
+        padding: 0 30px;
+        text-align: center;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.5s;
+
+        &.active,
+        &:hover {
+            color: #209e85;
+            border-bottom: 2px solid;
+        }
+    }
+}
