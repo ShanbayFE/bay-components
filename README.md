@@ -149,3 +149,16 @@ new tabs({
     onChangeTab: () => {},
 });
 ```
+
+## Collapse
+
+限制文字行数，可以展开收起文字
+
+```
+> initCollapse()
+
+调用方法后，作用于所有属性里有 bay-length-limited 的元素，最大行数取决于元素里的 max-line 属性。
+
+比如：
+<div bay-length-limited max-line=2>这里有一堆文字</div>
+```
