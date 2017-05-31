@@ -1,0 +1,23 @@
+.bay-collapse {
+    position: relative;
+
+    p {
+        margin: 0;
+        line-height: 1.2;
+        word-break: break-word;
+    }
+
+    .toggle-fold-btn {
+        float: right;
+        margin-top: 5px;
+        font-size: 14px;
+        color: #999;
+        cursor: pointer;
+    }
+
+    &::after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+}

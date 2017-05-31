@@ -1,7 +1,7 @@
 {
   "name": "bay-components",
   "version": "0.1.12",
- "description": "common functions for shanbay frontend projects",
+  "description": "common functions for shanbay frontend projects",
   "main": "lib/index.js",
   "scripts": {
     "start": "python -m SimpleHTTPServer & webpack -w",
