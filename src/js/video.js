@@ -118,7 +118,7 @@ const buildCover = () => {
 };
 
 const bindEvents = ($video, $controls, $cover) => {
-    $cover
+    $cover && $cover
         .on('click', handleStart($controls, $cover, $video[0]));
     $controls
         .on('click', '.play-btn', handlePlay($video[0]))
@@ -136,12 +136,17 @@ const initVideo = ($item) => {
     const root = $item.parent();
 
     const $controls = buildControls();
-    const $cover = buildCover();
-
-    root.append($cover);
     root.append($controls);
 
-    bindEvents($item, $controls, $cover);
+    // iOS has a default cover
+    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (iOS) {
+        bindEvents($item, $controls);
+    } else {
+        const $cover = buildCover();
+        root.append($cover);
+        bindEvents($item, $controls, $cover);
+    }
 };
 
 const initVideos = (videoSelector, options = {}) => {
