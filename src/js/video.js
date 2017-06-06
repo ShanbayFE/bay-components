@@ -138,10 +138,11 @@ const initVideo = ($item) => {
     const $controls = buildControls();
     root.append($controls);
 
-    // iOS has a default cover
-    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    // iOS(except iPad) has a default cover
+    const iOS = /iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     if (iOS) {
         bindEvents($item, $controls);
+        $controls.show();
     } else {
         const $cover = buildCover();
         root.append($cover);
