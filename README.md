@@ -179,7 +179,7 @@ new tabs({
     min: new Date(),
     // 最大的日期，格式不限，默认为 new Date()。
     max: new Date(),
-    // 一些特殊的日期，传入格式为 'YYYY-M'
+    // 一些特殊的日期，格式不限
     dates: {
         primary: [],
         secondary: [],

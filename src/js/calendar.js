@@ -80,8 +80,14 @@ class Calendar {
         this.activeDate = formatDate(this.activeDate, 'YYYY.MM');
         this.min = formatDate(this.min, 'YYYY.MM');
         this.max = formatDate(this.max, 'YYYY.MM');
-        this.dates.primary = this.dates.primary || [];
-        this.dates.secondary = this.dates.secondary || [];
+        this.dates.primary =
+            this.dates.primary ?
+            this.dates.primary.map(item => formatDate(item, 'YYYY-MM-D')) :
+            [];
+        this.dates.secondary =
+            this.dates.secondary ?
+            this.dates.secondary.map(item => formatDate(item, 'YYYY-MM-D')) :
+            [];
 
         this.render();
         this.bindEvents();
