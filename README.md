@@ -162,3 +162,28 @@ new tabs({
 比如：
 <div bay-length-limited max-line=2>这里有一堆文字</div>
 ```
+
+
+## Calendar
+
+日历组件
+
+```
+> initCalendar({
+    $el: $('#calendar'),
+    // 当前显示的日期，格式不限，默认为 new Date()。比如：'2017-05'。
+    // 注意：如果不在 min, max 范围内，会 throw Error。
+    // 同 min、max 一样，计算时只考虑了年份和月份
+    activeDate: new Date(),
+    // 最小的日期，格式不限，默认为 new Date()。
+    min: new Date(),
+    // 最大的日期，格式不限，默认为 new Date()。
+    max: new Date(),
+    // 一些特殊的日期，传入格式为 'YYYY-M'
+    primaryDates: [],
+    // 同上
+    secondaryDates: [],
+    // 点击日期的回调，传入日期
+    onClickDate: () => {},
+});
+```
