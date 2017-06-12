@@ -1,0 +1,73 @@
+.bay-calendar {
+    background: #fff;
+    padding: 10px 8px;
+
+    .header-nav {
+        padding: 0 8px;
+        text-align: center;
+        line-height: 30px;
+        font-size: 18px;
+        color: #209e85;
+
+        i {
+            line-height: 30px;
+            font-size: 18px;
+            color: #666;
+            cursor: pointer;
+
+            &:first-child {
+                float: left;
+            }
+
+            &:last-child {
+                float: right;
+            }
+
+            &.disabled {
+                color: #ccc;
+                cursor: default;
+            }
+        }
+    }
+
+    table {
+        width: 100%;
+        text-align: center;
+        line-height: 2;
+        font-size: 14px;
+        color: #999;
+    }
+
+    thead {
+        font-size: 16px;
+        color: #666;
+    }
+
+    .date-btn {
+        margin-top: 5px;
+        display: inline-block;
+        width: 26px;
+        height: 26px;
+        line-height: 26px;
+        cursor: pointer;
+        border: 1px solid transparent;
+
+        &.disabled {
+            color: #ccc;
+        }
+
+        &:not(.disabled) {
+            &.primary {
+                background: #209e85;
+                border-radius: 50%;
+                color: #fff;
+            }
+
+            &.secondary {
+                border: 1px solid;
+                border-radius: 50%;
+                color: #209e85;
+            }
+        }
+    }
+}

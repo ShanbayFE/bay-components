@@ -2,7 +2,10 @@ import { formatDate } from 'bay-utils';
 
 const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-const node = (tag, children) => `<${tag}>${children}</${tag}>`;
+const node = (tag, children, options = {}) =>
+    `<${tag} ${Object.keys(options).map(key => `${key}="${options[key]}"`).join(' ')}>
+        ${children}
+    </${tag}>`;
 
 const group = (data) => {
     const arr = [];
@@ -20,7 +23,12 @@ const getDates = (startDate, stopDate) => {
     const currentDate = new Date(startDate);
 
     while (currentDate <= stopDate) {
-        dateArray.push(formatDate(currentDate, 'D'));
+        const arr = formatDate(currentDate, 'YYYY-MM-D').split('-');
+        dateArray.push({
+            year: arr[0],
+            month: arr[1],
+            day: arr[2],
+        });
         currentDate.setDate(currentDate.getDate() + 1);
     }
 
@@ -29,7 +37,7 @@ const getDates = (startDate, stopDate) => {
 
 // 获取当前显示的日期
 const getActiveDates = (activeDate) => {
-    const firstDate = new Date(formatDate(activeDate, 'YYYY-MM'));
+    const firstDate = new Date(activeDate);
     const firstDay = firstDate.getDay();
     firstDate.setDate(firstDate.getDate() - firstDay);
     const lastDate = new Date(firstDate);
@@ -42,30 +50,94 @@ class Calendar {
     constructor(options) {
         this.options = Object.assign({
             $el: $('#calendar'),
-            min: '',
+            activeDate: new Date(),
+            min: new Date(),
             max: new Date(),
+            primaryDates: [],
+            secondaryDates: [],
+            onClickDate: () => {},
         }, options);
 
-        this.activeDate = '2017-06';
+        Object.keys(this.options).forEach((key) => {
+            this[key] = this.options[key];
+        });
 
+        this.handleClickDate = this.handleClickDate.bind(this);
         this.tableHead = this.tableHead.bind(this);
         this.tableRow = this.tableRow.bind(this);
         this.tableBody = this.tableBody.bind(this);
         this.table = this.table.bind(this);
 
+        this.init();
+    }
+
+    init() {
+        this.$el.addClass('bay-calendar');
+
+        this.activeDate = formatDate(this.activeDate, 'YYYY.MM');
+        this.min = formatDate(this.min, 'YYYY.MM');
+        this.max = formatDate(this.max, 'YYYY.MM');
+
         this.render();
+        this.bindEvents();
     }
 
     render() {
+        this.activeMonth = this.activeDate.split('.')[1];
         this.dates = getActiveDates(this.activeDate);
-        this.options.$el.html(this.table());
+        this.$el.html('');
+        this.$el.html(this.monthNav() + this.table());
+    }
+
+    bindEvents() {
+        this.$el.on('click', '.prev-month-btn', (e) => {
+            if ($(e.currentTarget).hasClass('disabled')) return;
+            this.updateMonth(-1);
+        });
+        this.$el.on('click', '.next-month-btn', (e) => {
+            if ($(e.currentTarget).hasClass('disabled')) return;
+            this.updateMonth(1);
+        });
+        this.$el.on('click', '.date-btn', this.handleClickDate);
+    }
+
+    updateMonth(num) {
+        this.activeDate = new Date(this.activeDate);
+        // update activeDate
+        this.activeDate.setMonth(this.activeDate.getMonth() + num);
+        this.activeDate = formatDate(this.activeDate, 'YYYY.MM');
+        this.render();
+    }
+
+    handleClickDate(e) {
+        const $el = $(e.currentTarget);
+        const date = $el.data('date');
+
+        this.onClickDate(date);
     }
 
     // Create the nav for next/prev month.
-    monthNav(date) {
+    monthNav() {
+        if (this.activeDate < this.min || this.activeDate > this.max) {
+            throw Error('请检查一下参数，activeDate 不在范围内');
+        }
+
         return node(
             'div',
-            date,
+            node('i', '', {
+                class: `
+                    ib ib-chevron-left prev-month-btn
+                    ${this.activeDate === this.min ? 'disabled' : ''}
+                `,
+            })
+            + node('span', this.activeDate)
+            + node('i', '', {
+                class: `
+                    ib ib-chevron-right next-month-btn
+                    ${this.activeDate === this.max ? 'disabled' : ''}
+                `,
+            }),
+            { class: 'header-nav' },
         );
     }
 
@@ -85,26 +157,38 @@ class Calendar {
         );
     }
 
-    tableRow(index) {
-        return node(
-            'tr',
-            group({
-                node: 'td',
-                min: 0,
-                max: 6,
-                item: counter =>
-                    node(
-                        'div',
-                        this.dates[(index * 7) + counter],
-                    ),
-            }),
-        );
+    tableRow(row) {
+        return group({
+            node: 'td',
+            min: 0,
+            max: 6,
+            item: (counter) => {
+                const index = (row * 7) + counter;
+                const date = this.dates[index];
+                const dateStr = `${date.year}-${date.month}-${date.day}`;
+
+                return node(
+                    'div',
+                    date.day,
+                    {
+                        class: `
+                            ${this.activeMonth !== date.month ? 'disabled' : ''}
+                            ${this.primaryDates.indexOf(dateStr) !== -1 ? 'primary' : ''}
+                            ${this.secondaryDates.indexOf(dateStr) !== -1 ? 'secondary' : ''}
+                            date-btn
+                        `,
+                        'data-date': dateStr,
+                    },
+                );
+            },
+        });
     }
 
     tableBody() {
         return node(
             'tbody',
             group({
+                node: 'tr',
                 min: 0,
                 max: 5,
                 item: this.tableRow,
