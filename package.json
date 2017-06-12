@@ -12,7 +12,7 @@
   "author": "wendy",
   "license": "ISC",
   "dependencies": {
-    "bay-utils": "1.1.5",
+    "bay-utils": "1.1.18",
     "babel-cli": "^6.18.0",
     "babel-core": "^6.21.0",
     "babel-loader": "^6.2.4",
