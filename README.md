@@ -180,9 +180,10 @@ new tabs({
     // 最大的日期，格式不限，默认为 new Date()。
     max: new Date(),
     // 一些特殊的日期，传入格式为 'YYYY-M'
-    primaryDates: [],
-    // 同上
-    secondaryDates: [],
+    dates: {
+        primary: [],
+        secondary: [],
+    },
     // 点击日期的回调，传入日期
     onClickDate: () => {},
 });

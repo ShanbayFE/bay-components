@@ -1,4 +1,4 @@
-import { formatDate } from 'bay-utils';
+import { merge, formatDate } from 'bay-utils';
 
 const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -41,6 +41,7 @@ const getActiveDates = (activeDate) => {
     const firstDay = firstDate.getDay();
     firstDate.setDate(firstDate.getDate() - firstDay);
     const lastDate = new Date(firstDate);
+    // 显示的日期共有 6 * 7 个，所以最后一个日期为 firstDate + 41
     lastDate.setDate(firstDate.getDate() + 41);
 
     return getDates(firstDate, lastDate);
@@ -48,15 +49,17 @@ const getActiveDates = (activeDate) => {
 
 class Calendar {
     constructor(options) {
-        this.options = Object.assign({
+        this.options = merge(options, {
             $el: $('#calendar'),
             activeDate: new Date(),
             min: new Date(),
             max: new Date(),
-            primaryDates: [],
-            secondaryDates: [],
+            dates: {
+                primary: [],
+                secondary: [],
+            },
             onClickDate: () => {},
-        }, options);
+        });
 
         Object.keys(this.options).forEach((key) => {
             this[key] = this.options[key];
@@ -77,14 +80,14 @@ class Calendar {
         this.activeDate = formatDate(this.activeDate, 'YYYY.MM');
         this.min = formatDate(this.min, 'YYYY.MM');
         this.max = formatDate(this.max, 'YYYY.MM');
+        this.dates.primary = this.dates.primary || [];
+        this.dates.secondary = this.dates.secondary || [];
 
         this.render();
         this.bindEvents();
     }
 
     render() {
-        this.activeMonth = this.activeDate.split('.')[1];
-        this.dates = getActiveDates(this.activeDate);
         this.$el.html('');
         this.$el.html(this.monthNav() + this.table());
     }
@@ -158,13 +161,16 @@ class Calendar {
     }
 
     tableRow(row) {
+        const activeDates = getActiveDates(this.activeDate);
+        const activeMonth = this.activeDate.split('.')[1];
+
         return group({
             node: 'td',
             min: 0,
             max: 6,
             item: (counter) => {
                 const index = (row * 7) + counter;
-                const date = this.dates[index];
+                const date = activeDates[index];
                 const dateStr = `${date.year}-${date.month}-${date.day}`;
 
                 return node(
@@ -172,9 +178,9 @@ class Calendar {
                     date.day,
                     {
                         class: `
-                            ${this.activeMonth !== date.month ? 'disabled' : ''}
-                            ${this.primaryDates.indexOf(dateStr) !== -1 ? 'primary' : ''}
-                            ${this.secondaryDates.indexOf(dateStr) !== -1 ? 'secondary' : ''}
+                            ${activeMonth !== date.month ? 'disabled' : ''}
+                            ${this.dates.primary.indexOf(dateStr) !== -1 ? 'primary' : ''}
+                            ${this.dates.secondary.indexOf(dateStr) !== -1 ? 'secondary' : ''}
                             date-btn
                         `,
                         'data-date': dateStr,
