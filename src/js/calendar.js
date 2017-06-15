@@ -37,7 +37,7 @@ const getDates = (startDate, stopDate) => {
 
 // 获取当前显示的日期
 const getActiveDates = (activeDate) => {
-    const firstDate = new Date(activeDate);
+    const firstDate = new Date(activeDate.replace('.', '-'));
     const firstDay = firstDate.getDay();
     firstDate.setDate(firstDate.getDate() - firstDay);
     const lastDate = new Date(firstDate);
@@ -111,7 +111,7 @@ class Calendar {
     }
 
     updateMonth(num) {
-        this.activeDate = new Date(this.activeDate);
+        this.activeDate = new Date(this.activeDate.replace('.', '-'));
         // update activeDate
         this.activeDate.setMonth(this.activeDate.getMonth() + num);
         this.activeDate = formatDate(this.activeDate, 'YYYY.MM');
