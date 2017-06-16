@@ -9,4 +9,4 @@ export { PullToLoadList } from './PullToLoadList';
 
 export { default as comments } from './comments';
 export { default as tabs } from './tabs';
-export { default as commentInput } from './commentInput';
+export { default as renderEditor } from './renderEditor';

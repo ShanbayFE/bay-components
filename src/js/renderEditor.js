@@ -1,7 +1,7 @@
-class CommentInput {
+class RenderEditor {
     constructor(config) {
         this.$el = null;
-        this.config = $.extend({}, CommentInput.defaultOptions, config);
+        this.config = $.extend({}, RenderEditor.defaultOptions, config);
         this.value = this.config.defaultValue;
 
         if (!this.$el) {
@@ -115,7 +115,7 @@ class CommentInput {
     }
 }
 
-CommentInput.defaultOptions = {
+RenderEditor.defaultOptions = {
     defaultValue: '',
     placeholder: '写点什么....',
     onClose: () => true,
@@ -131,15 +131,15 @@ CommentInput.defaultOptions = {
 };
 
 let instance;
-const commentInput = (config) => {
+const renderEditor = (config) => {
     if (instance) {
         instance.destory();
     }
 
-    instance = new CommentInput(config);
+    instance = new RenderEditor(config);
     instance.show();
 
     return instance;
 };
 
-export default commentInput;
+export default renderEditor;

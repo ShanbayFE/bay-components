@@ -189,17 +189,17 @@ new tabs({
 });
 ```
 
-## CommentInput
+## renderEditor
 
 输入框
 
 ```js
-    a =bayComponents.commentInput({
+    a =bayComponents.renderEditor({
         defaultValue: '',
         placeholder: '写点什么....',
         onClose: () => true, // 返回 true关闭，返回false 无动作
-        onSubmit: $.noop, // this 指向 commentInput 实例
-        onChange: $.noop, // this 指向 commentInput 实例
+        onSubmit: $.noop, // this 指向 renderEditor 实例
+        onChange: $.noop, // this 指向 renderEditor 实例
         checkboxData: {
             items: [
                 // { title: '', checked: '', value: ''}
