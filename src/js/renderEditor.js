@@ -89,7 +89,7 @@ class RenderEditor {
     render() {
         const config = this.config;
         const template = `
-            <div class="bay-comment-input">
+            <div class="bay-render-editor">
                 <a class="close-btn" href="javascript:;">
                     <i class="ib ib-times-circle"></i>
                 </a>
@@ -111,7 +111,7 @@ class RenderEditor {
             </div>`;
 
         $(template).appendTo('body');
-        this.$el = $('.bay-comment-input');
+        this.$el = $('.bay-render-editor');
     }
 }
 
