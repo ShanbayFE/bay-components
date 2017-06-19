@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://static.baydn.com/baydn/public/iconbay/v0.1.9/iconbay-full.css">
+    <link rel="stylesheet" href="/dist/bay-components.css">
+</head>
+<body>
+    <script src="https://static.baydn.com/baydn/public/jquery/v3.1.1/jquery.min.js" charset="utf-8"></script>
+    <script src="/dist/bay-components.js" charset="utf-8"></script>
+    <script>
+        a = bayComponents.renderEditor({
+            defaultValue: '123123aaaass',
+            onSubmit: function () {
+                console.log(arguments)
+            },
+            onChange: function () { },
+            checkboxData: {
+                items: [{ title: 'sss', checked: true, value: '123' }, { title: 'sss', checked: true, value: '123' }],
+
+            }
+        })
+    </script>
+</body>
+</html>
