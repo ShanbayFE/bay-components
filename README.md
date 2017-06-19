@@ -194,7 +194,7 @@ new tabs({
 输入框
 
 ```js
-    a =bayComponents.renderEditor({
+    a = bayComponents.renderEditor({
         defaultValue: '',
         placeholder: '写点什么....',
         onClose: () => true, // 返回 true关闭，返回false 无动作
