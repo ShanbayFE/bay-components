@@ -18,7 +18,7 @@ class RenderEditor {
 
     bindEvents() {
         this.$el
-            .on('click', '.send-btn', (e) => {
+            .on('click', '[data-action=send]', (e) => {
                 e.stopPropagation();
                 this.submitHandler();
             })
@@ -26,7 +26,7 @@ class RenderEditor {
                 e.stopPropagation();
                 $.proxy(this.config.change, this, e.currentTarget.value);
             })
-            .on('click', '.close-btn', (e) => {
+            .on('click', '[data-action=close]', (e) => {
                 e.stopPropagation();
                 this.closeHandler();
             });
@@ -90,9 +90,12 @@ class RenderEditor {
         const config = this.config;
         const template = `
             <div class="bay-render-editor">
-                <a class="close-btn" href="javascript:;">
-                    <i class="ib ib-times-circle"></i>
-                </a>
+                <header>
+                    <a class="close-btn" data-action="close">
+                        <i class="ib ib-times"></i>
+                    </a>
+                    <a class="send-btn" data-action="send">发送</a>
+                </header>
                 <textarea placeholder="${config.placeholder}">${this.value}</textarea>
                 <div class="select-options">
                     ${config.checkboxData.items.map(item =>
@@ -101,12 +104,6 @@ class RenderEditor {
                             </div>`,
                         ).join('')
                     }
-                </div>
-                <div class="footer">
-                    <button class="send-btn" type="button">
-                        <span>${config.submitText}</span>
-                        <i class="ib ib-send"></i>
-                    </button>
                 </div>
             </div>`;
 
