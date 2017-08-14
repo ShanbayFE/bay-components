@@ -209,3 +209,13 @@ new tabs({
         submitText: '发送',
     })
 ```
+
+## initFlipper
+
+```js
+    bayComponents.initFlipper({
+        $container: $('.flipper-pages'),
+        $nextBtn: $('.flipper-next-btn'),
+        onChangePage: (pageNum) => console.log(pageNum);
+    });
+```
