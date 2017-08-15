@@ -52,7 +52,7 @@ const bindEvents = ($container, $pages, $nextBtn, onChangePage) => {
         isTop = $el.scrollTop() === BOUNDARY_BUFFER;
 
         // 到达页面底部: 向上滑动的距离 + 屏幕高度 >= 该页页面高度
-        isBottom = $el.scrollTop() + $el.outerHeight() + 1 >= $el[0].scrollHeight;
+        isBottom = $el.scrollTop() + $el.outerHeight() >= $el[0].scrollHeight;
 
         if (touchCurrentClientY >= touchClientY) {
             // 向上滑动
@@ -74,6 +74,9 @@ const bindEvents = ($container, $pages, $nextBtn, onChangePage) => {
                 e.preventDefault();
             }
         }
+        // 因为 body 的 touchmove 调用了 preventDefault，所以要阻止冒泡到 body
+        // 否则超过一屏的页面不能进行浏览器默认的滚动
+        e.stopPropagation();
     });
 
     $pages.on('touchend', (e) => {
@@ -127,7 +130,8 @@ const initFlipper = (options) => {
 
     $('html').css('height', '100%');
     $('body').css('height', '100%');
-
+    // next-btn 元素和 flipper-pages 元素同级，在 next-btn 上面 scroll 会导致 body scroll(document.body.scrollTop)
+    $('body').on('touchmove', e => e.preventDefault());
     bindEvents($container, $pages, $nextBtn, onChangePage);
 };
 

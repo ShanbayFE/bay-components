@@ -121,7 +121,7 @@
       a = bayComponents.initFlipper({
         $container: $('.flipper-pages'),
         $nextBtn: $('.flipper-next-btn'),
-        onChangePage: (pageNum) => console.log(pageNum)
+        onChangePage: function (pageNum) { console.log(pageNum); }
       });
   </script>
 </body>
