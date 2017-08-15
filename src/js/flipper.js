@@ -39,6 +39,11 @@ const bindEvents = ($container, $pages, $nextBtn, onChangePage) => {
         navToPage(-1);
     };
 
+    // next-btn 元素和 flipper-pages 元素同级，在 next-btn 上面 scroll 会导致 body scroll(document.body.scrollTop)
+    $('body').on('touchmove', (e) => {
+        e.preventDefault();
+    });
+
     $pages.on('touchstart', (e) => {
         // 记录 touchstart 时的 Y 位置
         touchClientY = e.originalEvent.touches[0].clientY;
@@ -52,7 +57,8 @@ const bindEvents = ($container, $pages, $nextBtn, onChangePage) => {
         isTop = $el.scrollTop() === BOUNDARY_BUFFER;
 
         // 到达页面底部: 向上滑动的距离 + 屏幕高度 >= 该页页面高度
-        isBottom = $el.scrollTop() + $el.outerHeight() >= $el[0].scrollHeight;
+        // android 手机上会差 1px
+        isBottom = $el.scrollTop() + $el.outerHeight() + 1 >= $el[0].scrollHeight;
 
         if (touchCurrentClientY >= touchClientY) {
             // 向上滑动
@@ -128,10 +134,13 @@ const initFlipper = (options) => {
     const { $container, $nextBtn, onChangePage = () => {} } = options;
     const $pages = $container.children();
 
+    $container.addClass('flipper-pages');
+    $pages.addClass('flipper-page');
+    $nextBtn.addClass('flipper-next-btn');
+
     $('html').css('height', '100%');
     $('body').css('height', '100%');
-    // next-btn 元素和 flipper-pages 元素同级，在 next-btn 上面 scroll 会导致 body scroll(document.body.scrollTop)
-    $('body').on('touchmove', e => e.preventDefault());
+
     bindEvents($container, $pages, $nextBtn, onChangePage);
 };
 
