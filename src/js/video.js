@@ -87,20 +87,27 @@ const renderBar = ($controls, currentTime, duration) => {
     $controls.find('.video-controls-fulltime').html(formatSeconds(duration));
 };
 
-const buildControls = () => {
+const buildControls = (options) => {
+    const { captions = [] } = options;
+    const hasCaptionBtn = captions.length;
+    const captionsBtnHTML = [
+        '<div class="caption-btn"><i class="ib ib-eye-o"/></div>',
+    ].join('');
+
     const controlsHTML = [
-        '<div class="video-controls" style="display: none;">',
-        '   <div class="video-controls-btn">',
+        `<div class="video-controls ${hasCaptionBtn ? 'has-captions' : ''}" style="display: none;">`,
+        '   <div class="player-btn">',
         '       <i class="ib ib-play play-btn"></i>',
         '       <i class="ib ib-pause pause-btn" style="display: none;"></i>',
         '   </div>',
-        '   <div class="video-controls-remaintime">00:00</div>',
-        '   <div class="video-controls-bar">',
+        '   <div class="current-time">00:00</div>',
+        '   <div class="bar">',
         '       <div class="current-point"></div>',
         '       <div class="current-bar"></div>',
         '   </div>',
-        '   <div class="video-controls-fulltime">00:00</div>',
-        '   <div class="fullscreen"><i class="ib ib-expand"/></div>',
+        '   <div class="fulltime">00:00</div>',
+        hasCaptionBtn ? captionsBtnHTML : '',
+        '   <div class="fullscreen-btn"><i class="ib ib-expand"/></div>',
         '</div>',
     ].join('');
     return $($.parseHTML(controlsHTML));
@@ -134,7 +141,7 @@ const buildCover = () => {
         '   <div class="start-btn"><i class="ib ib-play-circle-o"></i></div>',
         '</div>',
     ].join('');
-    return $($.parseHTML(coverHtml));
+    return $(coverHtml);
 };
 
 const bindEvents = ($video, $controls, $cover, $caption, options) => {
@@ -143,7 +150,8 @@ const bindEvents = ($video, $controls, $cover, $caption, options) => {
     $controls
         .on('click', '.play-btn', handlePlay($video[0]))
         .on('click', '.pause-btn', handlePause($video[0]))
-        .on('click', '.fullscreen', toggleFullscreen($video[0]));
+        .on('click', '.caption-btn', () => $caption.toggle())
+        .on('click', '.fullscreen-btn', toggleFullscreen($video[0]));
     $video
         .on('timeupdate', (e) => {
             const videoEl = e.target;
@@ -163,7 +171,7 @@ const initVideo = ($item, options) => {
     $item.wrap("<div class='bay-video-box'></div>");
     const root = $item.parent();
 
-    const $controls = buildControls();
+    const $controls = buildControls(options);
     root.append($controls);
 
     const $caption = buildCaption();
