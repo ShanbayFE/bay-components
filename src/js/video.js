@@ -44,7 +44,6 @@ const resetControls = ($controls) => {
 
 const handleStart = ($controls, $cover, video) => () => {
     $cover.hide();
-    $controls.show();
     video.play();
 };
 
@@ -58,9 +57,11 @@ const handlePause = video => () => {
 
 const renderPlayBtn = ($controls, type = 'play') => {
     if (type === 'play') {
+        $controls.hide();
         $controls.find('.play-btn').hide();
         $controls.find('.pause-btn').show();
     } else {
+        $controls.show();
         $controls.find('.pause-btn').hide();
         $controls.find('.play-btn').show();
     }
@@ -78,11 +79,8 @@ const renderEnded = $controls => () => {
     resetControls($controls);
 };
 
-const renderBar = $controls => (e) => {
-    const videoEl = e.target;
-    const currentTime = videoEl.currentTime;
-    const duration = videoEl.duration;
-    const percent = (videoEl.currentTime / duration) * 100;
+const renderBar = ($controls, currentTime, duration) => {
+    const percent = (currentTime / duration) * 100;
     $controls.find('.current-point').css('left', `${percent}%`);
     $controls.find('.current-bar').css('width', `${percent}%`);
     $controls.find('.video-controls-remaintime').html(formatSeconds(currentTime));
@@ -108,6 +106,28 @@ const buildControls = () => {
     return $($.parseHTML(controlsHTML));
 };
 
+const buildCaption = () => {
+    const captionHTML = [
+        '<div class="caption">',
+        '</div>',
+    ].join('');
+
+    return $(captionHTML);
+};
+
+const updateCaption = ($caption, currentTime, captions) => {
+    const caption = captions.find((item, i) => {
+        const isLastItem = i === captions.length - 1;
+        const nextItemTime = captions[i + 1] && captions[i + 1].time;
+        if ((currentTime >= item.time && (isLastItem || currentTime < nextItemTime))) {
+            return true;
+        }
+        return false;
+    });
+
+    $caption.text(caption ? caption.text : '');
+};
+
 const buildCover = () => {
     const coverHtml = [
         '<div class="video-cover">',
@@ -117,7 +137,7 @@ const buildCover = () => {
     return $($.parseHTML(coverHtml));
 };
 
-const bindEvents = ($video, $controls, $cover) => {
+const bindEvents = ($video, $controls, $cover, $caption, options) => {
     $cover && $cover
         .on('click', handleStart($controls, $cover, $video[0]));
     $controls
@@ -125,34 +145,51 @@ const bindEvents = ($video, $controls, $cover) => {
         .on('click', '.pause-btn', handlePause($video[0]))
         .on('click', '.fullscreen', toggleFullscreen($video[0]));
     $video
-        .on('timeupdate', renderBar($controls))
+        .on('timeupdate', (e) => {
+            const videoEl = e.target;
+            const currentTime = videoEl.currentTime;
+            const duration = videoEl.duration;
+
+            renderBar($controls, currentTime, duration);
+            updateCaption($caption, currentTime, options.captions);
+        })
         .on('play', renderPlay($controls))
         .on('pause', renderPause($controls))
-        .on('ended', renderEnded($controls));
+        .on('ended', renderEnded($controls))
+        .on('click', () => $controls.toggle());
 };
 
-const initVideo = ($item) => {
-    $item.wrap("<div class='video-box'></div>");
+const initVideo = ($item, options) => {
+    $item.wrap("<div class='bay-video-box'></div>");
     const root = $item.parent();
 
     const $controls = buildControls();
     root.append($controls);
 
-    // iOS(except iPad) has a default cover
-    const iOS = /iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    if (iOS) {
-        bindEvents($item, $controls);
-        $item.on('play', () => $controls.show());
-    } else {
-        const $cover = buildCover();
-        root.append($cover);
-        bindEvents($item, $controls, $cover);
-    }
+    const $caption = buildCaption();
+    root.append($caption);
+
+    const $cover = buildCover();
+    root.append($cover);
+    bindEvents($item, $controls, $cover, $caption, options);
 };
 
 const initVideos = (videoSelector, options = {}) => {
+    const defaultOptions = {
+        hasCustomFullscreen: true,
+        captions: [{
+            time: 1,
+            text: 'hello',
+        }, {
+            time: 10,
+            text: 'hello hahaha',
+        }],
+        // fullScreenHTML: '<p>heheha</p>',
+    };
+
+    $(videoSelector).attr('webkit-playsinline', true).attr('playsinline', true).addClass('bay-video');
     $(videoSelector).each((i, item) => {
-        initVideo($(item), options);
+        initVideo($(item), $.extend({}, defaultOptions, options));
     });
 };
 
