@@ -9,30 +9,18 @@ const formatSeconds = (mSec) => {
     return `${mins}:${secs}`;
 };
 
-export const isFullScreen = () =>
-    !!(document.fullScreen || document.webkitIsFullScreen || document.mozFullScreen ||
-            document.fullscreenElement);
+export const checkFullScreen = () => !!(document.fullScreen || document.webkitIsFullScreen
+    || document.mozFullScreen || document.fullscreenElement);
 
-export const toggleFullscreen = videoArea => () => {
-    if (isFullScreen()) {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-            document.mozCancelFullScreen();
-        } else if (document.webkitCancelFullScreen) {
-            document.webkitCancelFullScreen();
-        }
-        return;
-    }
-
-    if (videoArea.requestFullscreen) {
-        videoArea.requestFullscreen();
-    } else if (videoArea.mozRequestFullScreen) {
-        videoArea.mozRequestFullScreen();
-    } else if (videoArea.webkitRequestFullScreen) {
-        videoArea.webkitRequestFullScreen();
-    } else if (videoArea.webkitEnterFullscreen) {
-        videoArea.webkitEnterFullscreen();
+const requestFullscreen = (el) => {
+    if (el.requestFullscreen) {
+        el.requestFullscreen();
+    } else if (el.mozRequestFullScreen) {
+        el.mozRequestFullScreen();
+    } else if (el.webkitRequestFullScreen) {
+        el.webkitRequestFullScreen();
+    } else if (el.msRequestFullscreen) {
+        el.msRequestFullscreen();
     }
 };
 
@@ -67,15 +55,15 @@ const renderPlayBtn = ($controls, type = 'play') => {
     }
 };
 
-const renderPlay = $controls => () => {
+const renderPlay = ($controls) => {
     renderPlayBtn($controls, 'play');
 };
 
-const renderPause = $controls => () => {
+const renderPause = ($controls) => {
     renderPlayBtn($controls, 'pause');
 };
 
-const renderEnded = $controls => () => {
+const renderEnded = ($controls) => {
     resetControls($controls);
 };
 
@@ -83,8 +71,8 @@ const renderBar = ($controls, currentTime, duration) => {
     const percent = (currentTime / duration) * 100;
     $controls.find('.current-point').css('left', `${percent}%`);
     $controls.find('.current-bar').css('width', `${percent}%`);
-    $controls.find('.video-controls-remaintime').html(formatSeconds(currentTime));
-    $controls.find('.video-controls-fulltime').html(formatSeconds(duration));
+    $controls.find('.current-time').html(formatSeconds(currentTime));
+    $controls.find('.fulltime').html(formatSeconds(duration));
 };
 
 const buildControls = (options) => {
@@ -144,14 +132,62 @@ const buildCover = () => {
     return $(coverHtml);
 };
 
-const bindEvents = ($video, $controls, $cover, $caption, options) => {
+export const toggleFullscreen = ($box) => {
+    const parentClassName = 'bay-video-fullscreen-wrap';
+
+    if ($box.parent().hasClass(parentClassName)) {
+        $box.unwrap('');
+    } else {
+        $box.wrap(`<div class="${parentClassName}"></div>`);
+    }
+
+    // wrap or unwrap will make video pause
+    $box.find('video')[0].play();
+};
+
+export const toggleNativeFullscreen = (video) => {
+    if (checkFullScreen()) {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+        }
+        return;
+    }
+
+    if (video.requestFullscreen) {
+        video.requestFullscreen();
+    } else if (video.mozRequestFullScreen) {
+        video.mozRequestFullScreen();
+    } else if (video.webkitRequestFullScreen) {
+        video.webkitRequestFullScreen();
+    } else if (video.webkitEnterFullscreen) {
+        video.webkitEnterFullscreen();
+    }
+};
+
+const bindEvents = ($video, $controls, $cover, $caption, $box, options) => {
+    const video = $video[0];
+    let hasPlayed = false;
+    let videoHeight = video.clientHeight;
+
     $cover && $cover
-        .on('click', handleStart($controls, $cover, $video[0]));
+        .on('click', handleStart($controls, $cover, video));
+
     $controls
-        .on('click', '.play-btn', handlePlay($video[0]))
-        .on('click', '.pause-btn', handlePause($video[0]))
+        .on('click', '.play-btn', handlePlay(video))
+        .on('click', '.pause-btn', handlePause(video))
         .on('click', '.caption-btn', () => $caption.toggle())
-        .on('click', '.fullscreen-btn', toggleFullscreen($video[0]));
+        .on('click', '.fullscreen-btn', () => {
+            if (options.isFullscreenCustomed) {
+                toggleFullscreen($box);
+            } else {
+                toggleNativeFullscreen(video);
+            }
+        });
+
     $video
         .on('timeupdate', (e) => {
             const videoEl = e.target;
@@ -161,10 +197,29 @@ const bindEvents = ($video, $controls, $cover, $caption, options) => {
             renderBar($controls, currentTime, duration);
             updateCaption($caption, currentTime, options.captions);
         })
-        .on('play', renderPlay($controls))
-        .on('pause', renderPause($controls))
-        .on('ended', renderEnded($controls))
-        .on('click', () => $controls.toggle());
+        .on('play', () => {
+            if (!hasPlayed) {
+                videoHeight = video.clientHeight;
+                $caption.show();
+                hasPlayed = true;
+            }
+            renderPlay($controls);
+        })
+        .on('pause', () => renderPause($controls))
+        .on('ended', () => renderEnded($controls))
+        .on('click', () => $controls.toggle())
+        .on('fullscreenchange webkitfullscreenchange mozfullscreenchange MSFullscreenChange', () => {
+            const windowHeight = window.outerHeight;
+            const captionY = (windowHeight - videoHeight) / 2;
+            if (checkFullScreen()) {
+                $caption.addClass('fullscreen');
+                $caption.css('transform', `translate(0, -${captionY}px)`);
+                requestFullscreen($caption[0]);
+            } else {
+                $caption.css('transform', 'translate(0, 0)');
+                $caption.removeClass('fullscreen');
+            }
+        });
 };
 
 const initVideo = ($item, options) => {
@@ -175,16 +230,18 @@ const initVideo = ($item, options) => {
     root.append($controls);
 
     const $caption = buildCaption();
+    $caption.hide();
     root.append($caption);
 
     const $cover = buildCover();
     root.append($cover);
-    bindEvents($item, $controls, $cover, $caption, options);
+    bindEvents($item, $controls, $cover, $caption, root, options);
 };
 
 const initVideos = (videoSelector, options = {}) => {
     const defaultOptions = {
-        hasCustomFullscreen: true,
+        isFullscreenCustomed: true,
+        onFullscreen: () => {},
         captions: [{
             time: 1,
             text: 'hello',
@@ -192,7 +249,6 @@ const initVideos = (videoSelector, options = {}) => {
             time: 10,
             text: 'hello hahaha',
         }],
-        // fullScreenHTML: '<p>heheha</p>',
     };
 
     $(videoSelector).attr('webkit-playsinline', true).attr('playsinline', true).addClass('bay-video');
