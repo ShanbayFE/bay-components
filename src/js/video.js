@@ -179,7 +179,10 @@ const bindEvents = ($video, $controls, $cover, $caption, $box, options) => {
     $controls
         .on('click', '.play-btn', handlePlay(video))
         .on('click', '.pause-btn', handlePause(video))
-        .on('click', '.caption-btn', () => $caption.toggle())
+        .on('click', '.caption-btn', () => {
+            $controls.hide();
+            $caption.toggle();
+        })
         .on('click', '.fullscreen-btn', () => {
             if (options.isFullscreenCustomed) {
                 toggleFullscreen($box);
