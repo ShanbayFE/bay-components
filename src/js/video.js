@@ -173,6 +173,19 @@ const bindEvents = ($video, $controls, $cover, $caption, $box, options) => {
     let hasPlayed = false;
     let videoHeight = video.clientHeight;
 
+    const screenChangeHandler = () => {
+        const windowHeight = window.outerHeight;
+        const captionY = (windowHeight - videoHeight) / 2;
+        if (checkFullScreen()) {
+            $caption.addClass('fullscreen');
+            $caption.css('transform', `translate(0, -${captionY}px)`);
+            requestFullscreen($caption[0]);
+        } else {
+            $caption.css('transform', 'translate(0, 0)');
+            $caption.removeClass('fullscreen');
+        }
+    };
+
     $cover && $cover
         .on('click', handleStart($controls, $cover, video));
 
@@ -211,18 +224,10 @@ const bindEvents = ($video, $controls, $cover, $caption, $box, options) => {
         .on('pause', () => renderPause($controls))
         .on('ended', () => renderEnded($controls))
         .on('click', () => $controls.toggle())
-        .on('fullscreenchange webkitfullscreenchange mozfullscreenchange MSFullscreenChange', () => {
-            const windowHeight = window.outerHeight;
-            const captionY = (windowHeight - videoHeight) / 2;
-            if (checkFullScreen()) {
-                $caption.addClass('fullscreen');
-                $caption.css('transform', `translate(0, -${captionY}px)`);
-                requestFullscreen($caption[0]);
-            } else {
-                $caption.css('transform', 'translate(0, 0)');
-                $caption.removeClass('fullscreen');
-            }
-        });
+        .on('webkitfullscreenchange', screenChangeHandler)
+        .on('mozfullscreenchange', screenChangeHandler)
+        .on('MSFullscreenChange', screenChangeHandler)
+        .on('fullscreenchange', screenChangeHandler);
 };
 
 const initVideo = ($item, options) => {
@@ -254,7 +259,13 @@ const initVideos = (videoSelector, options = {}) => {
         }],
     };
 
-    $(videoSelector).attr('webkit-playsinline', true).attr('playsinline', true).addClass('bay-video');
+    $(videoSelector)
+        .addClass('bay-video')
+        .attr('webkit-playsinline', true)
+        .attr('playsinline', true)
+        .attr('x5-video-orientation', 'portrait')
+        .attr('x5-video-player-type', 'h5');
+
     $(videoSelector).each((i, item) => {
         initVideo($(item), $.extend({}, defaultOptions, options));
     });
