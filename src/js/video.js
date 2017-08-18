@@ -1,4 +1,4 @@
-import { enableInlineVideo } from './iphone';
+import { enableInlineVideo } from './iphone-inline-video';
 
 const formatNum = (num) => {
     const value = Math.floor(num);
