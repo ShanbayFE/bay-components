@@ -1,3 +1,5 @@
+import { enableInlineVideo } from './iphone';
+
 const formatNum = (num) => {
     const value = Math.floor(num);
     return value < 10 ? `0${value}` : value;
@@ -254,7 +256,10 @@ const bindEvents = ($video, $controls, $cover, $caption, $box, options) => {
 };
 
 const initVideo = ($item, options) => {
+    enableInlineVideo($item[0]);
+
     $item.wrap("<div class='bay-video-box'></div>");
+
     const root = $item.parent();
 
     const $controls = buildControls(options);
