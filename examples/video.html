@@ -12,7 +12,22 @@
         <script src="https://static.baydn.com/baydn/public/jquery/v3.1.1/jquery.min.js" charset="utf-8"></script>
         <script src="/dist/bay-components.js" charset="utf-8"></script>
         <script type="text/javascript">
-            bayComponents.initVideos('video');
+            bayComponents.initVideos('video', {
+                isFullscreenCustomed: true,
+                onFullscreennChange: function (type, style) { alert(type + style) },
+                onTimeUpdate: function () {},
+                captions: [{
+                    startTime: 1,
+                    endTime: 6,
+                    text: 'hello',
+                    transText: '你好',
+                }, {
+                    startTime: 10,
+                    endTime: 16,
+                    text: 'hello hahaha',
+                    transText: '你好啦啦啦',
+                }],
+            });
         </script>
     </body>
 </html>

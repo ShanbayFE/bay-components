@@ -111,16 +111,14 @@ const buildCaption = () => {
 };
 
 const updateCaption = ($caption, currentTime, captions) => {
-    const caption = captions.find((item, i) => {
-        const isLastItem = i === captions.length - 1;
-        const nextItemTime = captions[i + 1] && captions[i + 1].time;
-        if ((currentTime >= item.time && (isLastItem || currentTime < nextItemTime))) {
+    const caption = captions.find((item) => {
+        if ((currentTime >= item.startTime && (currentTime <= item.endTime))) {
             return true;
         }
         return false;
     });
 
-    $caption.text(caption ? caption.text : '');
+    $caption.html(caption ? `<p>${caption.text}</p><p>${caption.transText}</p>` : '');
 };
 
 const buildCover = () => {
@@ -132,17 +130,23 @@ const buildCover = () => {
     return $(coverHtml);
 };
 
-export const toggleFullscreen = ($box) => {
+export const toggleCustomFullscreen = ($box, options) => {
     const parentClassName = 'bay-video-fullscreen-wrap';
+    const video = $box.find('video')[0];
+    const isVideoPaused = video.paused || video.ended;
 
     if ($box.parent().hasClass(parentClassName)) {
+        // options.onFullscreennChange('exit', 'custom');
         $box.unwrap('');
     } else {
+        // options.onFullscreennChange('enter', 'custom');
         $box.wrap(`<div class="${parentClassName}"></div>`);
     }
 
     // wrap or unwrap will make video pause
-    $box.find('video')[0].play();
+    if (!isVideoPaused) {
+        video.play();
+    }
 };
 
 export const toggleNativeFullscreen = (video) => {
@@ -198,7 +202,7 @@ const bindEvents = ($video, $controls, $cover, $caption, $box, options) => {
         })
         .on('click', '.fullscreen-btn', () => {
             if (options.isFullscreenCustomed) {
-                toggleFullscreen($box);
+                toggleCustomFullscreen($box, options);
             } else {
                 toggleNativeFullscreen(video);
             }
@@ -212,6 +216,7 @@ const bindEvents = ($video, $controls, $cover, $caption, $box, options) => {
 
             renderBar($controls, currentTime, duration);
             updateCaption($caption, currentTime, options.captions);
+            options.onTimeUpdate(currentTime, duration, videoEl);
         })
         .on('play', () => {
             if (!hasPlayed) {
@@ -224,10 +229,28 @@ const bindEvents = ($video, $controls, $cover, $caption, $box, options) => {
         .on('pause', () => renderPause($controls))
         .on('ended', () => renderEnded($controls))
         .on('click', () => $controls.toggle())
-        .on('webkitfullscreenchange', screenChangeHandler)
-        .on('mozfullscreenchange', screenChangeHandler)
-        .on('MSFullscreenChange', screenChangeHandler)
-        .on('fullscreenchange', screenChangeHandler);
+        .on('x5videoenterfullscreen', () => {
+            options.onFullscreennChange('enter', 'native');
+        })
+        .on('x5videoexitfullscreen', () => {
+            options.onFullscreennChange('exit', 'native');
+        })
+        .on('webkitfullscreenchange', () => {
+            options.onFullscreennChange(checkFullScreen() ? 'enter' : 'exit', 'native');
+            screenChangeHandler();
+        })
+        .on('mozfullscreenchange', () => {
+            options.onFullscreennChange(checkFullScreen() ? 'enter' : 'exit', 'native');
+            screenChangeHandler();
+        })
+        .on('MSFullscreenChange', () => {
+            options.onFullscreennChange(checkFullScreen() ? 'enter' : 'exit', 'native');
+            screenChangeHandler();
+        })
+        .on('fullscreenchange', () => {
+            options.onFullscreennChange(checkFullScreen() ? 'enter' : 'exit', 'native');
+            screenChangeHandler();
+        });
 };
 
 const initVideo = ($item, options) => {
@@ -248,15 +271,10 @@ const initVideo = ($item, options) => {
 
 const initVideos = (videoSelector, options = {}) => {
     const defaultOptions = {
-        isFullscreenCustomed: true,
-        onFullscreen: () => {},
-        captions: [{
-            time: 1,
-            text: 'hello',
-        }, {
-            time: 10,
-            text: 'hello hahaha',
-        }],
+        isFullscreenCustomed: false,
+        onFullscreennChange: () => {},
+        onTimeUpdate: () => {},
+        captions: [],
     };
 
     $(videoSelector)
@@ -267,7 +285,7 @@ const initVideos = (videoSelector, options = {}) => {
         .attr('x5-video-player-type', 'h5');
 
     $(videoSelector).each((i, item) => {
-        initVideo($(item), $.extend({}, defaultOptions, options));
+        initVideo($(item), $.extend(defaultOptions, options));
     });
 };
 

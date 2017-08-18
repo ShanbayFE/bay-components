@@ -1,13 +1,8 @@
-.bay-video {
-    vertical-align: middle;
-    width: 100%;
-
-}
-
 .bay-video-box {
     position: relative;
     line-height: 24px;
     font-size: 16px;
+    font-family: PingFangSC-Light,Helvetica Neue,Helvetica,Microsoft YaHei,Arial,SimHei;
 
     *::-webkit-media-controls-panel {
         display: none!important;
@@ -22,6 +17,11 @@
     *::-webkit-media-controls-start-playback-button {
         display: none !important;
         -webkit-appearance: none;
+    }
+
+    video {
+        vertical-align: middle;
+        width: 100%;
     }
 
     .video-cover {
@@ -48,7 +48,9 @@
         left: 0;
         right: 0;
         text-align: center;
-
+        p {
+            margin: 0;
+        }
         &.fullscreen {
             z-index: 10000000000;
         }
