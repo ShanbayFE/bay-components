@@ -32,9 +32,10 @@ const resetControls = ($controls) => {
     $controls.find('.video-controls-remaintime').html('00:00');
 };
 
-const handleStart = ($controls, $cover, video) => () => {
+const handleStart = ($controls, $cover, video, options) => () => {
     $cover.hide();
     video.play();
+    options.onStartBtnClick();
 };
 
 const handlePlay = video => () => {
@@ -193,7 +194,7 @@ const bindEvents = ($video, $controls, $cover, $caption, $box, options) => {
     };
 
     $cover && $cover
-        .on('click', handleStart($controls, $cover, video));
+        .on('click', handleStart($controls, $cover, video, options));
 
     $controls
         .on('click', '.play-btn', handlePlay(video))
@@ -279,6 +280,7 @@ const initVideos = (videoSelector, options = {}) => {
         isFullscreenCustomed: false,
         onFullscreennChange: () => {},
         onTimeUpdate: () => {},
+        onStartBtnClick: () => {},
         captions: [],
     };
 
