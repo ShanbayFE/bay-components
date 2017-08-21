@@ -18,6 +18,7 @@
     isFullscreenCustomed: true,
     onFullscreennChange: (type, style) => console.log(type, style),
     onTimeUpdate: (currentTime, duration, video) => console.log(currentTime, duration, video),
+    onStartBtnClick: function () { alert('hihihi') },
     captions: [{
         startTime: 1,
         endTime: 6,
