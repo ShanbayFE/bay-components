@@ -14,7 +14,22 @@
 只要页面有 video 标签，调用下面的函数就会渲染出 video 的控制条等内容
 
 ```
-> initVideos('audio')
+> initVideos('audio', {
+    isFullscreenCustomed: true,
+    onFullscreennChange: (type, style) => console.log(type, style),
+    onTimeUpdate: (currentTime, duration, video) => console.log(currentTime, duration, video),
+    captions: [{
+        startTime: 1,
+        endTime: 6,
+        text: 'hello',
+        transText: '你好',
+    }, {
+        startTime: 10,
+        endTime: 16,
+        text: 'hello hahaha',
+        transText: '你好啦啦啦',
+    }],
+});
 ```
 
 ## PullToLoadList
