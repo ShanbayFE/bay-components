@@ -21,6 +21,7 @@
     onStartBtnClick: function () { console.log('start play') },
     onPlay: function () { console.log('play') },
     onPause: function () { console.log('pause') },
+    onEnd: function () { console.log('end') },
     captions: [{
         startTime: 1,
         endTime: 6,
