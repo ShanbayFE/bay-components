@@ -16,7 +16,9 @@
                 isFullscreenCustomed: true,
                 onFullscreennChange: function (type, style) { alert(type + style) },
                 onTimeUpdate: function () {},
-                onStartBtnClick: function () { alert('hihihi') },
+                onStartBtnClick: function () { console.log('start play') },
+                onPlay: function () { console.log('play') },
+                onPause: function () { console.log('pause') },
                 captions: [{
                     startTime: 1,
                     endTime: 6,

@@ -228,8 +228,12 @@ const bindEvents = ($video, $controls, $cover, $caption, $box, options) => {
                 hasPlayed = true;
             }
             renderPlay($controls);
+            options.onPlay();
         })
-        .on('pause', () => renderPause($controls))
+        .on('pause', () => {
+            renderPause($controls);
+            options.onPause();
+        })
         .on('ended', () => renderEnded($controls))
         .on('click', () => $controls.toggle())
         .on('x5videoenterfullscreen', () => {
@@ -281,6 +285,8 @@ const initVideos = (videoSelector, options = {}) => {
         onFullscreennChange: () => {},
         onTimeUpdate: () => {},
         onStartBtnClick: () => {},
+        onPlay: () => {},
+        onPause: () => {},
         captions: [],
     };
 
