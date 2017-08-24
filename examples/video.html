@@ -17,9 +17,10 @@
                 onFullscreennChange: function (type, style) { alert(type + style) },
                 onTimeUpdate: function () {},
                 onStartBtnClick: function () { console.log('start play') },
-                onPlay: function () { console.log('play') },
+                onPlay: function () { console.log('play'); setTimeout(function() {$('video').prop('muted', false)}, 5000) },
                 onPause: function () { console.log('pause') },
                 onEnd: function () { console.log('end') },
+                poster: 'https://media-image1.baydn.com/speaking_pub_image/tkdghk/b122bce4ccbde09f9f351ca9d8c45f7e.33acc16c8a004e212b7131d7bd56ade4.png',
                 captions: [{
                     startTime: 1,
                     endTime: 6,

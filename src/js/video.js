@@ -124,9 +124,9 @@ const updateCaption = ($caption, currentTime, captions) => {
     $caption.html(caption ? `<p>${caption.text}</p><p>${caption.transText}</p>` : '');
 };
 
-const buildCover = () => {
+const buildCover = (poster) => {
     const coverHtml = [
-        '<div class="video-cover">',
+        `<div class="video-cover" style="background-image: url(${poster})">`,
         '   <div class="start-btn"><i class="ib ib-play-circle-o"></i></div>',
         '</div>',
     ].join('');
@@ -277,7 +277,7 @@ const initVideo = ($item, options) => {
     $caption.hide();
     root.append($caption);
 
-    const $cover = buildCover();
+    const $cover = buildCover(options.poster);
     root.append($cover);
     bindEvents($item, $controls, $cover, $caption, root, options);
 };
@@ -292,6 +292,7 @@ const initVideos = (videoSelector, options = {}) => {
         onPause: () => {},
         onEnd: () => {},
         captions: [],
+        poster: null,
     };
 
     $(videoSelector)
