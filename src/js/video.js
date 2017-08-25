@@ -34,6 +34,9 @@ const resetControls = ($controls) => {
 
 const handleStart = ($controls, $cover, video, options) => () => {
     $cover.hide();
+    video.onerror = (e) => {
+        alert(JSON.stringify(e));
+    };
     video.play();
     options.onStartBtnClick();
 };
