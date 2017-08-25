@@ -1,6 +1,6 @@
 {
   "name": "bay-components",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "common functions for shanbay frontend projects",
   "main": "lib/index.js",
   "scripts": {
