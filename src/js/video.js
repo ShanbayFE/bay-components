@@ -176,9 +176,41 @@ export const toggleNativeFullscreen = (video) => {
 };
 
 const bindEvents = ($video, $controls, $cover, $caption, $box, options) => {
+    const currentPoint = $('.current-point');
+    const currentBar = $('.current-bar');
     const video = $video[0];
     let hasPlayed = false;
     let videoHeight = video.clientHeight;
+    let percent = 0;
+
+    currentPoint.on('mousedown touchstart', function (event) {
+        const offsetX = $(this)[0].offsetLeft;
+        const mouseX = event.pageX || event.originalEvent.targetTouches[0].pageX;
+        const controlWidth = $(this).parent().width();
+
+        $(document).on('mousemove touchmove', (ev) => {
+            const x = (ev.pageX || ev.originalEvent.targetTouches[0].pageX) - mouseX;
+            const nowX = offsetX + x;
+            percent = (nowX / controlWidth) * 100;
+
+            video.pause();
+
+            if (nowX >= 0 && nowX <= controlWidth - 4) {
+                currentPoint.css({
+                    left: `${percent}%`,
+                });
+                currentBar.css({
+                    width: `${percent}%`,
+                });
+            }
+        });
+    });
+
+    currentPoint.on('mouseup touchend', () => {
+        video.currentTime = (video.duration * percent) / 100;
+        video.play();
+        $(document).off('mousemove touchmove');
+    });
 
     const screenChangeHandler = () => {
         const windowHeight = window.outerHeight;
