@@ -302,9 +302,8 @@ const initVideos = (videoSelector, options = {}) => {
         .addClass('bay-video')
         .attr('webkit-playsinline', true)
         .attr('playsinline', true)
-        .attr('x5-video-orientation', 'portrait');
-        // TODO: test
-        // .attr('x5-video-player-type', 'h5');
+        .attr('x5-video-orientation', 'portrait')
+        .attr('x5-video-player-type', 'h5');
 
     $(videoSelector).each((i, item) => {
         initVideo($(item), $.extend(defaultOptions, options));
