@@ -15,7 +15,8 @@ const resetControls = ($controls) => {
     $controls.find('.audio-controls-time').html('00:00');
 };
 
-const handlePlay = audio => () => {
+const handlePlay = (audio, $audios) => () => {
+    $audios.each((i, item) => item.pause());
     audio.play();
 };
 
@@ -74,26 +75,26 @@ const buildControls = () => {
     return $($.parseHTML(controlsHTML));
 };
 
-const bindEvents = ($audio, $controls) => {
+const bindEvents = ($audio, $controls, $audios) => {
     $controls
-        .on('click', '.play-btn', handlePlay($audio[0]))
+        .on('click', '.play-btn', handlePlay($audio[0], $audios))
         .on('click', '.pause-btn', handlePause($audio[0]));
     $audio
         .on('timeupdate', renderBar($controls))
-        .on('play', renderPlay($controls))
+        .on('play', renderPlay($controls, $audios))
         .on('pause', renderPause($controls))
         .on('ended', renderEnded($controls));
 };
 
-const initAudio = ($item) => {
+const initAudio = ($item, options, $audios) => {
     const $controls = buildControls();
-    bindEvents($item, $controls);
+    bindEvents($item, $controls, $audios);
     $item.after($controls);
 };
 
 const initAudios = (audioSelector, options = {}) => {
     $(audioSelector).each((i, item) => {
-        initAudio($(item), options);
+        initAudio($(item), options, $(audioSelector));
     });
 };
 
