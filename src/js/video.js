@@ -176,14 +176,14 @@ export const toggleNativeFullscreen = (video) => {
 };
 
 const bindEvents = ($video, $controls, $cover, $caption, $box, options) => {
-    const currentPoint = $('.current-point');
-    const currentBar = $('.current-bar');
+    const currentPoint = $controls.find('.current-point');
+    const currentBar = $controls.find('.current-bar');
     const video = $video[0];
     let hasPlayed = false;
     let videoHeight = video.clientHeight;
     let percent = 0;
 
-    currentPoint.on('mousedown touchstart', function (event) {
+    currentPoint.on('mousedown touchstart', function startEvent(event) {
         const offsetX = $(this)[0].offsetLeft;
         const mouseX = event.pageX || event.originalEvent.targetTouches[0].pageX;
         const controlWidth = $(this).parent().width();
