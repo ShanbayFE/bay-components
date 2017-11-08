@@ -1,4 +1,4 @@
-import { merge } from 'bay-utils';
+const { merge } = bayUtils;
 
 /*
     tabs 的 html 结构如下：

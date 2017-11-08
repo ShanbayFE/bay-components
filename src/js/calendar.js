@@ -1,4 +1,4 @@
-import { merge, formatDate } from 'bay-utils';
+const { merge, formatDate } = bayUtils;
 
 const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 

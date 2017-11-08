@@ -13,6 +13,7 @@
         "$": true,
         "describe": true,
         "it": true,
+        "bayUtils": true,
     },
     "env": {
         "browser": true,

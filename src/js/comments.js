@@ -1,4 +1,4 @@
-import { merge, ajax } from 'bay-utils';
+const { merge, ajax } = bayUtils;
 import comment from './comment';
 
 class Comments {

@@ -1,4 +1,4 @@
-import { merge, ajax, formatDate } from 'bay-utils';
+const { merge, ajax, formatDate } = bayUtils;
 
 class Comment {
     constructor(options) {

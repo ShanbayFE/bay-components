@@ -1,4 +1,4 @@
-import { ajax } from 'bay-utils';
+const { ajax } = bayUtils;
 
 export class PullToLoadList {
     constructor(options = {}) {
