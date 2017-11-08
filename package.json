@@ -11,12 +11,11 @@
   },
   "author": "wendy",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-core": "^6.21.0",
     "babel-loader": "^6.2.4",
     "babel-preset-latest": "^6.16.0",
-    "bay-utils": "1.1.18",
     "chai": "^3.5.0",
     "clean-webpack-plugin": "^0.1.14",
     "css-loader": "^0.23.1",
