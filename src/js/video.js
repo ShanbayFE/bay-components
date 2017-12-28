@@ -282,7 +282,7 @@ const initVideo = ($item, options) => {
     root.append($caption);
 
     const poster = $item.data('poster');
-    const $cover = buildCover(poster || options.poster);
+    const $cover = buildCover(poster);
     root.append($cover);
     bindEvents($item, $controls, $cover, $caption, root, options);
 };
@@ -297,7 +297,6 @@ const initVideos = (videoSelector, options = {}) => {
         onPause: () => {},
         onEnd: () => {},
         captions: [],
-        poster: null,
     };
 
     $(videoSelector)
