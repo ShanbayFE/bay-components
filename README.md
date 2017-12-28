@@ -1,6 +1,5 @@
 # bay-components
 
-
 ## Audio
 
 只要页面有 audio 标签，调用下面的函数就会渲染出 audio 的控制条等内容
@@ -34,6 +33,12 @@
         transText: '你好啦啦啦',
     }],
 });
+```
+
+给 video 标签加上 data-poster 添加 poster
+
+```html
+<video src="xxx.mp4" data-poster="xxx.png"></video>
 ```
 
 ## PullToLoadList
@@ -182,7 +187,6 @@ new tabs({
 <div bay-length-limited max-line=2>这里有一堆文字</div>
 ```
 
-
 ## Calendar
 
 日历组件
@@ -213,20 +217,20 @@ new tabs({
 输入框
 
 ```js
-    a = bayComponents.renderEditor({
-        defaultValue: '',
-        placeholder: '写点什么....',
-        onClose: () => true, // 返回 true关闭，返回false 无动作
-        onSubmit: $.noop, // this 指向 renderEditor 实例
-        onChange: $.noop, // this 指向 renderEditor 实例
-        checkboxData: {
-            items: [
-                // { title: '', checked: '', value: ''}
-            ],
-        },
+a = bayComponents.renderEditor({
+    defaultValue: '',
+    placeholder: '写点什么....',
+    onClose: () => true, // 返回 true关闭，返回false 无动作
+    onSubmit: $.noop, // this 指向 renderEditor 实例
+    onChange: $.noop, // this 指向 renderEditor 实例
+    checkboxData: {
+        items: [
+            // { title: '', checked: '', value: ''}
+        ],
+    },
 
-        submitText: '发送',
-    })
+    submitText: '发送',
+});
 ```
 
 ## initFlipper
