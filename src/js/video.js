@@ -1,20 +1,25 @@
 import { enableInlineVideo } from './iphone-inline-video';
 
-const formatNum = (num) => {
+const formatNum = num => {
     const value = Math.floor(num);
     return value < 10 ? `0${value}` : value;
 };
 
-const formatSeconds = (mSec) => {
+const formatSeconds = mSec => {
     const mins = formatNum(mSec / 60);
     const secs = formatNum(mSec % 60);
     return `${mins}:${secs}`;
 };
 
-export const checkFullScreen = () => !!(document.fullScreen || document.webkitIsFullScreen
-    || document.mozFullScreen || document.fullscreenElement);
+export const checkFullScreen = () =>
+    !!(
+        document.fullScreen ||
+        document.webkitIsFullScreen ||
+        document.mozFullScreen ||
+        document.fullscreenElement
+    );
 
-const requestFullscreen = (el) => {
+const requestFullscreen = el => {
     if (el.requestFullscreen) {
         el.requestFullscreen();
     } else if (el.mozRequestFullScreen) {
@@ -26,7 +31,7 @@ const requestFullscreen = (el) => {
     }
 };
 
-const resetControls = ($controls) => {
+const resetControls = $controls => {
     $controls.find('.current-point').css('left', '0%');
     $controls.find('.current-bar').css('width', '0%');
     $controls.find('.video-controls-remaintime').html('00:00');
@@ -34,7 +39,7 @@ const resetControls = ($controls) => {
 
 const handleStart = ($controls, $cover, video, options) => () => {
     $cover.hide();
-    video.onerror = (e) => {
+    video.onerror = e => {
         alert(JSON.stringify(e));
     };
     video.play();
@@ -61,35 +66,35 @@ const renderPlayBtn = ($controls, type = 'play') => {
     }
 };
 
-const renderPlay = ($controls) => {
+const renderPlay = $controls => {
     renderPlayBtn($controls, 'play');
 };
 
-const renderPause = ($controls) => {
+const renderPause = $controls => {
     renderPlayBtn($controls, 'pause');
 };
 
-const renderEnded = ($controls) => {
+const renderEnded = $controls => {
     resetControls($controls);
 };
 
 const renderBar = ($controls, currentTime, duration) => {
-    const percent = (currentTime / duration) * 100;
+    const percent = currentTime / duration * 100;
     $controls.find('.current-point').css('left', `${percent}%`);
     $controls.find('.current-bar').css('width', `${percent}%`);
     $controls.find('.current-time').html(formatSeconds(currentTime));
     $controls.find('.fulltime').html(formatSeconds(duration));
 };
 
-const buildControls = (options) => {
+const buildControls = options => {
     const { captions = [] } = options;
     const hasCaptionBtn = captions.length;
-    const captionsBtnHTML = [
-        '<div class="caption-btn"><i class="ib ib-eye-o"/></div>',
-    ].join('');
+    const captionsBtnHTML = ['<div class="caption-btn"><i class="ib ib-eye-o"/></div>'].join('');
 
     const controlsHTML = [
-        `<div class="video-controls ${hasCaptionBtn ? 'has-captions' : ''}" style="display: none;">`,
+        `<div class="video-controls ${
+            hasCaptionBtn ? 'has-captions' : ''
+        }" style="display: none;">`,
         '   <div class="player-btn">',
         '       <i class="ib ib-play play-btn"></i>',
         '       <i class="ib ib-pause pause-btn" style="display: none;"></i>',
@@ -108,17 +113,14 @@ const buildControls = (options) => {
 };
 
 const buildCaption = () => {
-    const captionHTML = [
-        '<div class="caption">',
-        '</div>',
-    ].join('');
+    const captionHTML = ['<div class="caption">', '</div>'].join('');
 
     return $(captionHTML);
 };
 
 const updateCaption = ($caption, currentTime, captions) => {
-    const caption = captions.find((item) => {
-        if ((currentTime >= item.startTime && (currentTime <= item.endTime))) {
+    const caption = captions.find(item => {
+        if (currentTime >= item.startTime && currentTime <= item.endTime) {
             return true;
         }
         return false;
@@ -127,7 +129,7 @@ const updateCaption = ($caption, currentTime, captions) => {
     $caption.html(caption ? `<p>${caption.text}</p><p>${caption.transText}</p>` : '');
 };
 
-const buildCover = (poster) => {
+const buildCover = poster => {
     const coverHtml = [
         `<div class="video-cover" style="background-image: url(${poster})">`,
         '   <div class="start-btn"><i class="ib ib-play-circle-o"></i></div>',
@@ -155,7 +157,7 @@ export const toggleCustomFullscreen = ($box, options) => {
     }
 };
 
-export const toggleNativeFullscreen = (video) => {
+export const toggleNativeFullscreen = video => {
     if (checkFullScreen()) {
         if (document.exitFullscreen) {
             document.exitFullscreen();
@@ -196,8 +198,7 @@ const bindEvents = ($video, $controls, $cover, $caption, $box, options) => {
         }
     };
 
-    $cover && $cover
-        .on('click', handleStart($controls, $cover, video, options));
+    $cover && $cover.on('click', handleStart($controls, $cover, video, options));
 
     $controls
         .on('click', '.play-btn', handlePlay(video))
@@ -215,7 +216,7 @@ const bindEvents = ($video, $controls, $cover, $caption, $box, options) => {
         });
 
     $video
-        .on('timeupdate', (e) => {
+        .on('timeupdate', e => {
             const videoEl = e.target;
             const currentTime = videoEl.currentTime;
             const duration = videoEl.duration;
@@ -280,7 +281,8 @@ const initVideo = ($item, options) => {
     $caption.hide();
     root.append($caption);
 
-    const $cover = buildCover(options.poster);
+    const poster = $item.data('poster');
+    const $cover = buildCover(poster || options.poster);
     root.append($cover);
     bindEvents($item, $controls, $cover, $caption, root, options);
 };
