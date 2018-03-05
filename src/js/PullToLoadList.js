@@ -5,7 +5,7 @@ export class PullToLoadList {
         const defaultOptions = {
             container: window,
             ipp: 10,
-            pageNum: 1,
+            pageNum: 0,
             total: 0,
             apiUrl: '',
             threshold: 10,
