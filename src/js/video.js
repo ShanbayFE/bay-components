@@ -79,7 +79,7 @@ const renderEnded = $controls => {
 };
 
 const renderBar = ($controls, currentTime, duration) => {
-    const percent = currentTime / duration * 100;
+    const percent = (currentTime / duration) * 100;
     $controls.find('.current-point').css('left', `${percent}%`);
     $controls.find('.current-bar').css('width', `${percent}%`);
     $controls.find('.current-time').html(formatSeconds(currentTime));
@@ -281,7 +281,7 @@ const initVideo = ($item, options) => {
     $caption.hide();
     root.append($caption);
 
-    const poster = $item.data('poster');
+    const poster = $item.data('poster') || $item.attr('poster');
     const $cover = buildCover(poster);
     root.append($cover);
     bindEvents($item, $controls, $cover, $caption, root, options);

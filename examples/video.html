@@ -1,38 +1,42 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
-        <title>Video</title>
-        <link rel="stylesheet" href="https://static.baydn.com/baydn/public/iconbay/v0.1.9/iconbay-full.css">
-        <link rel="stylesheet" href="/dist/bay-components.css">
-    </head>
-    <body>
-        <video src="https://media-video1.baydn.com/storage_media_video/03.mp4"></video>
-        <script src="https://static.baydn.com/baydn/public/jquery/v3.1.1/jquery.min.js" charset="utf-8"></script>
-        <script src="/dist/bay-components.js" charset="utf-8"></script>
-        <script type="text/javascript">
-            bayComponents.initVideos('video', {
-                isFullscreenCustomed: true,
-                onFullscreennChange: function (type, style) { alert(type + style) },
-                onTimeUpdate: function () {},
-                onStartBtnClick: function () { console.log('start play') },
-                onPlay: function () { console.log('play'); setTimeout(function() {$('video').prop('muted', false)}, 5000) },
-                onPause: function () { console.log('pause') },
-                onEnd: function () { console.log('end') },
-                poster: 'https://media-image1.baydn.com/speaking_pub_image/tkdghk/b122bce4ccbde09f9f351ca9d8c45f7e.33acc16c8a004e212b7131d7bd56ade4.png',
-                captions: [{
-                    startTime: 1,
-                    endTime: 6,
-                    text: 'hello',
-                    transText: '你好',
-                }, {
-                    startTime: 10,
-                    endTime: 16,
-                    text: 'hello hahaha',
-                    transText: '你好啦啦啦',
-                }],
-            });
-        </script>
-    </body>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+    <title>Video</title>
+    <link rel="stylesheet" href="https://static.baydn.com/baydn/public/iconbay/v0.1.9/iconbay-full.css">
+    <link rel="stylesheet" href="/dist/bay-components.css">
+</head>
+
+<body>
+    <video src="https://media-video1.baydn.com/storage_media_video/03.mp4"></video>
+    <script src="https://static.baydn.com/baydn/public/jquery/v3.1.1/jquery.min.js" charset="utf-8"></script>
+    <script src="https://static.baydn.com/baydn/public/bay-utils/v1.3.1/bay-utils.min.js" charset="utf-8"></script>
+    <script src="/dist/bay-components.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        bayComponents.initVideos('video', {
+            isFullscreenCustomed: true,
+            onFullscreennChange: function (type, style) { alert(type + style) },
+            onTimeUpdate: function () { },
+            onStartBtnClick: function () { console.log('start play') },
+            onPlay: function () { console.log('play'); setTimeout(function () { $('video').prop('muted', false) }, 5000) },
+            onPause: function () { console.log('pause') },
+            onEnd: function () { console.log('end') },
+            poster: 'https://media-image1.baydn.com/speaking_pub_image/tkdghk/b122bce4ccbde09f9f351ca9d8c45f7e.33acc16c8a004e212b7131d7bd56ade4.png',
+            captions: [{
+                startTime: 1,
+                endTime: 6,
+                text: 'hello',
+                transText: '你好',
+            }, {
+                startTime: 10,
+                endTime: 16,
+                text: 'hello hahaha',
+                transText: '你好啦啦啦',
+            }],
+        });
+    </script>
+</body>
+
 </html>
