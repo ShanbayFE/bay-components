@@ -19,6 +19,13 @@ const initCollapse = () => {
             return;
         }
 
+        const lineHeight = $text.css('lineHeight');
+        const height = parseInt(lineHeight, 10) * maxLine;
+
+        if ($text.height() <= height) {
+            return;
+        }
+
         $text.css({ '-webkit-line-clamp': maxLine });
         $wrapper.append($toggleFoldBtn);
 
