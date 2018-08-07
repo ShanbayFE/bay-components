@@ -1,3 +1,4 @@
+/* global bayUtils */
 const { merge, ajax, formatDate } = bayUtils;
 
 class Comment {
@@ -55,13 +56,15 @@ class Comment {
     updateLikeStatus(status) {
         const { comment, buildLikeApiData } = this.options;
 
-        ajax(merge(buildLikeApiData({ vote: status, commentId: comment.id }), {
-            type: 'PUT',
-            data: { vote: status },
-            success: () => {
-                this.changeLikeStatus(status);
-            },
-        }));
+        ajax(
+            merge(buildLikeApiData({ vote: status, commentId: comment.id }), {
+                type: 'PUT',
+                data: { vote: status },
+                success: () => {
+                    this.changeLikeStatus(status);
+                },
+            }),
+        );
     }
 
     // 改变喜欢/不喜欢状态
@@ -89,7 +92,7 @@ class Comment {
             this.$toggleDislikeBtn.addClass('disable');
             this.$toggleDislikeBtn.html('已不喜欢');
             if (isVotedUp) {
-                $voteNum.html((voteNum - 1) || '');
+                $voteNum.html(voteNum - 1 || '');
             }
         }
 
@@ -98,7 +101,7 @@ class Comment {
             this.$toggleDislikeBtn.removeClass('disable');
             this.$toggleDislikeBtn.html('不喜欢');
             if (isVotedUp) {
-                $voteNum.html((voteNum - 1) || '');
+                $voteNum.html(voteNum - 1 || '');
             }
         }
     }
@@ -126,8 +129,14 @@ class Comment {
     // 渲染
     render() {
         const {
-            $el, comment, currentUser, isInteractiveDisabled,
-            hasLikeBtn, hasDislikeBtn, hasNestReplyBtn, hasReportBtn,
+            $el,
+            comment,
+            currentUser,
+            isInteractiveDisabled,
+            hasLikeBtn,
+            hasDislikeBtn,
+            hasNestReplyBtn,
+            hasReportBtn,
         } = this.options;
         const data = comment;
         const user = data.user || {};
@@ -143,47 +152,60 @@ class Comment {
                         </div>
                     </div>
                     <div class="operation-partial">
-                        ${currentUser.user_id_str === user.id && !isInteractiveDisabled ?
-                            `<i
+                        ${
+                            currentUser.user_id_str === user.id && !isInteractiveDisabled
+                                ? `<i
                                 class="ib ib-pencil operation-item show-input-btn"
                                 data-comment='${JSON.stringify(data)}'
-                            />` :
-                            ''
+                            />`
+                                : ''
                         }
-                        ${hasLikeBtn ?
-                            `<div class="toggle-like-btn operation-item ${data.is_voted_up ? 'active' : ''}">
+                        ${
+                            hasLikeBtn
+                                ? `<div class="toggle-like-btn operation-item ${
+                                      data.is_voted_up ? 'active' : ''
+                                  }">
                                 <i class="ib ib-thumbs-up-o" />
                                 <span class="vote-num">${data.vote_score || ''}</span>
-                            </div> ` :
-                            ''
+                            </div> `
+                                : ''
                         }
-                        ${(hasDislikeBtn || hasNestReplyBtn || hasReportBtn) && !isInteractiveDisabled ?
-                            `<div class="operation-list">
+                        ${
+                            (hasDislikeBtn || hasNestReplyBtn || hasReportBtn) &&
+                            !isInteractiveDisabled
+                                ? `<div class="operation-list">
                                 <div class="dots show-operations-btn">…</div>
                                 <div class="list">
-                                    ${hasDislikeBtn ?
-                                        `<span class="toggle-dislike-btn ${data.is_voted_down ? 'disable' : ''}">
+                                    ${
+                                        hasDislikeBtn
+                                            ? `<span class="toggle-dislike-btn ${
+                                                  data.is_voted_down ? 'disable' : ''
+                                              }">
                                             ${data.is_voted_down ? '已不喜欢' : '不喜欢'}
-                                        </span> ` :
-                                        ''
+                                        </span> `
+                                            : ''
                                     }
-                                    ${hasNestReplyBtn ?
-                                        `<span
+                                    ${
+                                        hasNestReplyBtn
+                                            ? `<span
                                             class="show-input-btn"
                                             data-to-user-id=${user.id}
-                                        >回复</span>` :
-                                        ''
+                                        >回复</span>`
+                                            : ''
                                     }
-                                    ${hasReportBtn ?
-                                        `<a
+                                    ${
+                                        hasReportBtn
+                                            ? `<a
                                             class="report-btn"
-                                            href="/web/report?report_url=${encodeURIComponent(data.report_url)}&next=${encodeURIComponent(window.location.href)}"
-                                        > 举报 </a>` :
-                                        ''
+                                            href="/web/report?report_url=${encodeURIComponent(
+                                                data.report_url,
+                                            )}&next=${encodeURIComponent(window.location.href)}"
+                                        > 举报 </a>`
+                                            : ''
                                     }
                                 </div>
-                            </div>` :
-                            ''
+                            </div>`
+                                : ''
                         }
                     </div>
                 </div>

@@ -1,3 +1,4 @@
+/* global bayUtils */
 const { ajax } = bayUtils;
 
 export class PullToLoadList {
@@ -59,13 +60,21 @@ export class PullToLoadList {
             if (container === window) {
                 const docRoot = document.documentElement;
 
-                if (docRoot.scrollHeight - Math.ceil(window.scrollY || window.pageYOffset) - this.threshold <= docRoot.clientHeight) {
+                if (
+                    docRoot.scrollHeight -
+                        Math.ceil(window.scrollY || window.pageYOffset) -
+                        this.threshold <=
+                    docRoot.clientHeight
+                ) {
                     this.loadMoreData();
                 }
             } else {
                 // reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight
                 // Note: container 固定高 且 scroll
-                if (container.scrollHeight - Math.ceil(container.scrollTop) - this.threshold <= container.clientHeight) {
+                if (
+                    container.scrollHeight - Math.ceil(container.scrollTop) - this.threshold <=
+                    container.clientHeight
+                ) {
                     this.loadMoreData();
                 }
             }
@@ -118,7 +127,7 @@ export class PullToLoadList {
         ajax({
             url,
             type: 'GET',
-            success: (data) => {
+            success: data => {
                 const parsedData = this.parseData(data);
                 this.$loadHint.hide();
                 this.items = parsedData.items;

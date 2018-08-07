@@ -1,5 +1,7 @@
-const { merge, ajax } = bayUtils;
+/* global bayUtils bayComponents */
 import comment from './comment';
+
+const { merge, ajax } = bayUtils;
 
 class Comments {
     constructor(options) {
@@ -104,37 +106,49 @@ class Comments {
 
         // 更新评论
         if (this.editingComment.id) {
-            ajax(merge(buildCommentApiData({
-                commentId: this.editingComment.id,
-                content,
-            }), {
-                type: 'PUT',
-                success: this.render,
-            }));
+            ajax(
+                merge(
+                    buildCommentApiData({
+                        commentId: this.editingComment.id,
+                        content,
+                    }),
+                    {
+                        type: 'PUT',
+                        success: this.render,
+                    },
+                ),
+            );
 
             return;
         }
 
         // 回复评论
         if (this.toUserId) {
-            ajax(merge(buildCommentApiData({
-                to_user_id: this.toUserId,
-                content,
-            }), {
-                url: apiUrl,
-                type: 'POST',
-                success: this.render,
-            }));
+            ajax(
+                merge(
+                    buildCommentApiData({
+                        to_user_id: this.toUserId,
+                        content,
+                    }),
+                    {
+                        url: apiUrl,
+                        type: 'POST',
+                        success: this.render,
+                    },
+                ),
+            );
 
             return;
         }
 
         // 添加评论
-        ajax(merge(buildCommentApiData({ content }), {
-            url: apiUrl,
-            type: 'POST',
-            success: this.render,
-        }));
+        ajax(
+            merge(buildCommentApiData({ content }), {
+                url: apiUrl,
+                type: 'POST',
+                success: this.render,
+            }),
+        );
     }
 
     // 显示输入页面
@@ -149,7 +163,10 @@ class Comments {
         }
 
         this.$commentInputBox.show();
-        this.$commentInputBox.find('input').val(this.editingComment.content || '').focus();
+        this.$commentInputBox
+            .find('input')
+            .val(this.editingComment.content || '')
+            .focus();
 
         return false;
     }
@@ -164,9 +181,14 @@ class Comments {
 
     // 渲染单个评论
     renderComment(data) {
-        comment(merge({
-            comment: this.options.parseItemData(data),
-        }, this.options));
+        comment(
+            merge(
+                {
+                    comment: this.options.parseItemData(data),
+                },
+                this.options,
+            ),
+        );
     }
 
     renderEmptyBlock() {
@@ -205,6 +227,7 @@ class Comments {
         $el.html('');
         this.isCreating = false;
 
+        // eslint-disable-next-line no-new
         new bayComponents.PullToLoadList({
             ipp: this.options.ipp,
             pageNum: this.options.pageNum,
@@ -214,7 +237,7 @@ class Comments {
 
             renderItem: this.renderComment,
             parseData: this.options.parseData,
-            onLoadedFirstPage: (data) => {
+            onLoadedFirstPage: data => {
                 const commentsData = parseData(data);
                 let commentData = {
                     user: {},
