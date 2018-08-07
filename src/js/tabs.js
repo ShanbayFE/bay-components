@@ -1,3 +1,4 @@
+/* global bayUtils  */
 const { merge } = bayUtils;
 
 /*
