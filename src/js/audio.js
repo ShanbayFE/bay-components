@@ -76,6 +76,40 @@ const buildControls = () => {
 };
 
 const bindEvents = ($audio, $controls, $audios) => {
+    const currentPoint = $controls.find('.current-point');
+    const currentBar = $controls.find('.current-bar');
+    const audio = $audio[0];
+    let percent = 0;
+
+    currentPoint.on('mousedown touchstart', function startEvent(event) {
+        const offsetX = $(this)[0].offsetLeft;
+        const mouseX = event.pageX || event.originalEvent.targetTouches[0].pageX;
+        const controlWidth = $(this).parent().width();
+
+        $(document).on('mousemove touchmove', (ev) => {
+            const x = (ev.pageX || ev.originalEvent.targetTouches[0].pageX) - mouseX;
+            const nowX = offsetX + x;
+            percent = (nowX / controlWidth) * 100;
+
+            audio.pause();
+
+            if (nowX >= 0 && nowX <= controlWidth - 4) {
+                currentPoint.css({
+                    left: `${percent}%`,
+                });
+                currentBar.css({
+                    width: `${percent}%`,
+                });
+            }
+        });
+    });
+
+    currentPoint.on('mouseup touchend', () => {
+        audio.currentTime = (audio.duration * percent) / 100;
+        audio.play();
+        $(document).off('mousemove touchmove');
+    });
+
     $controls
         .on('click', '.play-btn', handlePlay($audio[0], $audios))
         .on('click', '.pause-btn', handlePause($audio[0]));
